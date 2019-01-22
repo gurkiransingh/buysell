@@ -1,0 +1,448 @@
+@import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+// Header css
+header {
+  position: sticky;
+  top: 0px;
+  z-index: 9999999;
+  margin: 0;
+  background-color: #083951;
+
+  nav {
+    top: 0px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    border-bottom: 2px solid #be2134;
+    padding: 0.7em 5em 0.7em 5em;
+    > .logo {
+      transition: padding 0.5s;
+      width: 10%;
+      position: relative;
+      i {
+        color: #fa4e59;
+        font-size: 3em;
+        position: absolute;
+      }
+    }
+
+    > .links {
+      width: 90%;
+      display: flex;
+      justify-content: space-between;
+      .user-menu {
+        width: 80%;
+        > div {
+          display: flex;
+          transition: padding 0.5s;
+          a {
+            color: #aaa;
+            &:hover {
+              color: white;
+            }
+          }
+          a:not(:last-child) {
+            margin-right: 2em;
+          }
+        }
+      }
+    }
+    .on-off-links {
+      .login-status {
+        div {
+          text-align: right;
+          display: flex;
+          justify-content: flex-end;
+          transition: padding 0.5s;
+          a:hover {
+            text-shadow: 1px 0px 20px yellow;
+          }
+        }
+        div.sign-on {
+          a {
+            text-decoration: none;
+            background-color: #e74c3c;
+            color: whitesmoke;
+            padding: 2px 6px 2px 6px;
+          }
+        }
+        div.sign-off {
+          a {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+          }
+          i {
+            color: #e74c3c;
+          }
+        }
+        text-align: right;
+        width: 15%;
+      }
+    }
+
+    a {
+      font-size: 0.8em;
+      color: white;
+      text-decoration: none;
+    }
+  }
+}
+
+// Login Page css
+
+.login-popup {
+  width: 100%;
+  display: flex;
+  position: relative;
+  .login {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url("https://picsum.photos/1502/700");
+    background-size: cover;
+    background-repeat: no-repeat;
+    flex-grow: 1;
+    padding-bottom: 50%;
+    position: relative;
+    form {
+      font-family: "Raleway", sans-serif;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      width: 30%;
+      display: flex;
+      flex-direction: column;
+      padding: 2em;
+      background: ghostwhite;
+      border-radius: 10px;
+      label {
+        font-size: 0.5em;
+        color: #e74c3c;
+        text-transform: uppercase;
+        padding: 1em;
+        input {
+          width: 100%;
+          height: 30px;
+          margin-bottom: 20px;
+          background: none;
+          color: #e74c3c;
+          border: none;
+          border-bottom: 1px solid #e74c3c;
+          opacity: 0.5;
+          transition: opacity 0.3s;
+          &:hover {
+            opacity: 1;
+          }
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+      button {
+        font-size: 0.6em;
+        width: 100%;
+        border: none;
+        margin-bottom: 20px;
+        border-radius: 25px;
+        font-family: "Raleway", sans-serif;
+        letter-spacing: 0.2em;
+        color: #e74c3c;
+        transition: background 1s, color 1s;
+        padding: 1em;
+        &:hover {
+          background: #e74c3c;
+          color: #ecf0f1;
+          cursor: pointer;
+        }
+      }
+      div.start-signup {
+        color: #e74c3c;
+        text-align: center;
+        font-size: 0.7em;
+        a {
+          text-decoration: underline;
+          color: #e74c3c;
+          cursor: pointer;
+          margin-left: 0.5em;
+        }
+      }
+    }
+  }
+}
+
+// Home Page css
+
+.banner-page {
+  display: flex;
+  position: relative;
+  .content {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url("https://picsum.photos/1501/700");
+    background-size: cover;
+    background-repeat: no-repeat;
+    flex-grow: 1;
+    padding-bottom: 50%;
+    position: relative;
+    > div {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 2em;
+    }
+  }
+}
+
+.footer {
+  font-family: "Raleway", sans-serif;
+  position: relative;
+  overflow: hidden;
+  bottom: 0;
+  background-color: rgb(53, 51, 51);
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.7em;
+  .social {
+    font-weight: bold;
+    background-color: #c53144;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 100%;
+    height: 6em;
+    padding: 2em 0;
+    div:first-child {
+      color: #482227;
+      font-weight: bold;
+      font-size: 1.5em;
+      text-transform: uppercase;
+    }
+    div:nth-child(2) {
+      display: flex;
+      align-self: center;
+      width: 10%;
+      justify-content: space-around;
+      i {
+        font-size: 2em;
+        cursor: pointer;
+      }
+    }
+  }
+  div.info {
+    height: 18em;
+    background-color: #161516;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    align-items: center;
+    .info-wrapper {
+      background-color: #161516;
+      width: 70%;
+      height: 67%;
+      display: flex;
+      align-items: center;
+      position: relative;
+      .text,
+      .contact-us,
+      .work {
+        text-align: left;
+      }
+      .text {
+        width: 35%;
+        height: 100%;
+        p:nth-child(2) {
+          width: 90%;
+          color: #686868;
+        }
+      }
+      .contact-us {
+        height: 100%;
+        width: 30%;
+        div {
+          color: #686868;
+          p {
+            i {
+              margin-right: 1em;
+              color: #c53144;
+              font-size: 1.5em;
+            }
+          }
+        }
+      }
+      .work {
+        height: 100%;
+        width: 35%;
+        div {
+          color: #686868;
+          p:nth-child(2) {
+            text-align: center;
+            border: 1px solid #c53144;
+            padding: 1em;
+            width: 40%;
+            height: 1em;
+            color: #c53144;
+            font-weight: bold;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+  div.copyright {
+    height: 3em;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+      height: 2em;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: space-around;
+      width: 40%;
+      span {
+        align-self: center;
+        color: #686868;
+      }
+    }
+  }
+}
+
+// Sign Up css
+
+.signup-popup {
+  width: 100%;
+  display: flex;
+  position: relative;
+  .signup {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url("https://picsum.photos/1502/700");
+    background-size: cover;
+    background-repeat: no-repeat;
+    flex-grow: 1;
+    padding-bottom: 50%;
+    position: relative;
+    form {
+      font-family: "Raleway", sans-serif;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.7em;
+      width: 50%;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 2em;
+      background: ghostwhite;
+      border-radius: 10px;
+      .basic-info {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+      }
+      .creds-info {
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        div.gender {
+          padding: 1em;
+          i {
+            font-size: 3em;
+          }
+          span:first-child {
+            margin-right: 1em;
+          }
+        }
+      }
+      label {
+        font-size: 0.5em;
+        color: #e74c3c;
+        text-transform: uppercase;
+        padding: 1em;
+        input {
+          width: 50%;
+          height: 30px;
+          margin-bottom: 20px;
+          background: none;
+          color: #e74c3c;
+          border: none;
+          border-bottom: 1px solid #e74c3c;
+          opacity: 0.5;
+          transition: opacity 0.3s;
+          &:hover {
+            opacity: 1;
+          }
+          &:focus {
+            outline: none;
+          }
+        }
+      }
+      button {
+        font-size: 0.6em;
+        width: 100%;
+        border: none;
+        margin-bottom: 20px;
+        border-radius: 25px;
+        font-family: "Raleway", sans-serif;
+        letter-spacing: 0.2em;
+        color: #e74c3c;
+        transition: background 1s, color 1s;
+        padding: 1em;
+        &:hover {
+          background: #e74c3c;
+          color: #ecf0f1;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+// Logout
+
+.logout-container {
+  width: 100%;
+  display: flex;
+  position: relative;
+  .logout {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url("https://picsum.photos/1502/700");
+    background-size: cover;
+    background-repeat: no-repeat;
+    flex-grow: 1;
+    padding-bottom: 50%;
+    position: relative;
+    form {
+      font-family: "Raleway", sans-serif;
+      position: absolute;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      div {
+        display: flex;
+        justify-content: space-around;
+        a {
+          color: white;
+          text-decoration: none;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+.profile-container {
+  min-height: 100vh;
+}
