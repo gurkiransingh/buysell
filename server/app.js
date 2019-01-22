@@ -6,6 +6,7 @@ let express = require("express"),
   bodyParser = require("body-parser"),
   User = require("./models/user"),
   LocalStrategy = require("passport-local"),
+  path = require('path'),
   passportLocalMongoose = require("passport-local-mongoose");
 
 const app = express();
@@ -17,6 +18,9 @@ mongoose.connect(
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.use(express.static(path.join(__dirname, "/../dist")));
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -41,9 +45,9 @@ app.use(
 
 app.use(passport.session());
 
-const port = process.env.PORT;
+let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 3000;
+  port = 5000;
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -93,5 +97,9 @@ function isLoggedIn(req, res, next) {
   }
   res.end("Login first !");
 }
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/../dist/index.html"));
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

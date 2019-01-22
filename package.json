@@ -11,8 +11,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx}\"",
     "lint": "eslint \"src/**/*.{js,jsx}\" --quiet",
     "dev": "parcel src/index.html",
-    "heroku-postbuild": "parcel src/index.html",
-    "start": "node server/app.js"
+    "start": "parcel build src/index.html && node server/app.js"
   },
   "repository": {
     "type": "git",
