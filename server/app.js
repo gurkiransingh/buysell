@@ -41,7 +41,10 @@ app.use(
 
 app.use(passport.session());
 
-const port = 3000;
+const port = process.env.PORT;
+if (port == null || port == "") {
+  port = 3000;
+}
 
 // eslint-disable-next-line no-unused-vars
 
