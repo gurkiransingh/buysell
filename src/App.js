@@ -9,6 +9,10 @@ import Login from "./login";
 import SignUp from "./signup";
 import Profile from "./profile";
 import Logout from "./logout";
+import Contact from "./contact-us";
+import AboutUs from "./about-us";
+import Process from "./process";
+
 import { BrowserRouter, Route } from "react-router-dom";
 
 class App extends React.Component {
@@ -70,6 +74,21 @@ class App extends React.Component {
           <Route
             path="/user"
             component={Profile}
+            isLogged={this.state.isLogged}
+          />
+          <Route
+            path="/contactUs"
+            component={Contact}
+            isLogged={this.state.isLogged}
+          />
+          <Route
+            path="/aboutUs"
+            component={AboutUs}
+            isLogged={this.state.isLogged}
+          />
+          <Route
+            path="/process"
+            component={Process}
             isLogged={this.state.isLogged}
           />
           <Footer />
