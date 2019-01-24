@@ -31,9 +31,9 @@ class Header extends React.Component {
               )}
               {!this.props.status && (
                 <div>
-                  <Link to="">Our Process</Link>
-                  <Link to="">About Us</Link>
-                  <Link to="">Contact Us</Link>
+                  <Link to="/process">Our Process</Link>
+                  <Link to="/aboutUs">About Us</Link>
+                  <Link to="/contactUs">Contact Us</Link>
                 </div>
               )}
             </div>
