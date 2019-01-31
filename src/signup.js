@@ -69,7 +69,7 @@ class SignUp extends React.Component {
     event.preventDefault();
     if (this.state.username !== "" && this.state.password !== "") {
       axios
-        .post("http://localhost:3000/register", {
+        .post("/register", {
           firstname: this.state.firstname,
           lastname: this.state.lastname,
           email: this.state.email,
