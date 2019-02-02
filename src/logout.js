@@ -14,7 +14,7 @@ class Logout extends React.Component {
 
   logout() {
     let self = this;
-    axios.get("http://localhost:5000/logout").then(function(res) {
+    axios.get("/logout").then(function(res) {
       if (res.data === "out") {
         sessionStorage.clear();
         self.props.logOutHandler();
