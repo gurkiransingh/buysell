@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 class Header extends React.Component {
   constructor(props) {
@@ -16,24 +16,40 @@ class Header extends React.Component {
       <header>
         <nav>
           <div className="logo">
-            <Link to="/" className="logo">
+            <NavLink to="/" className="logo">
               <i className="fab fa-viadeo" />
-            </Link>
+            </NavLink>
           </div>
           <div className="links">
             <div className="user-menu">
               {this.props.status && (
                 <div>
-                  <Link to="">Redesign</Link>
-                  <Link to="">Donate</Link>
-                  <Link to="">Browse</Link>
+                  <NavLink 
+                    to="/user/123"
+                    activeClassName='selected'
+                    >My Profile</NavLink>
                 </div>
               )}
               {!this.props.status && (
                 <div>
-                  <Link to="/process">Our Process</Link>
-                  <Link to="/aboutUs">About Us</Link>
-                  <Link to="/contactUs">Contact Us</Link>
+                  <NavLink 
+                    to="/process"
+                    activeClassName="selected"
+                    >
+                    Our Process
+                  </NavLink>
+                  <NavLink 
+                    to="/aboutUs"
+                    activeClassName="selected"
+                    >
+                    About
+                  </NavLink>
+                  <NavLink 
+                    to="/contactUs"
+                    activeClassName="selected"
+                    >
+                    Ask
+                  </NavLink>
                 </div>
               )}
             </div>
@@ -42,16 +58,16 @@ class Header extends React.Component {
             <div className="login-status">
               {!this.props.status && (
                 <div className="sign-on">
-                  <Link to="/login" state={{ action: "login" }}>
+                  <NavLink to="/login" state={{ action: "login" }}>
                     Login
-                  </Link>
+                  </NavLink>
                 </div>
               )}
               {this.props.status && (
                 <div className="sign-off">
-                  <Link to="/logout">
+                  <NavLink to="/logout">
                     <i className="fa fa-sign-out-alt" />
-                  </Link>
+                  </NavLink>
                 </div>
               )}
             </div>

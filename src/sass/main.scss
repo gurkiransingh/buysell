@@ -122,7 +122,7 @@ header {
       background: ghostwhite;
       border-radius: 10px;
       label {
-        font-size: 0.5em;
+        font-size: 0.8em;
         color: #e74c3c;
         text-transform: uppercase;
         padding: 1em;
@@ -145,7 +145,7 @@ header {
         }
       }
       button {
-        font-size: 0.6em;
+        font-size: 0.8em;
         width: 100%;
         border: none;
         margin-bottom: 20px;
@@ -376,7 +376,7 @@ header {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 0.7em;
+      font-size: 0.8em;
       width: 50%;
       display: flex;
       flex-wrap: wrap;
@@ -426,7 +426,7 @@ header {
         }
       }
       button {
-        font-size: 0.6em;
+        font-size: 0.8em;
         width: 100%;
         border: none;
         margin-bottom: 20px;
@@ -658,3 +658,38 @@ header {
     }
   }
 }
+
+.sub-header {
+  display: flex;
+  justify-content: center;
+  .links {
+    width: 35%;
+    border-bottom: 15px solid #AE0C28;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    width: 12em;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.2em 0.5em;
+    button {
+      background: transparent;
+      border: none;
+      outline: none;
+      a {
+        font-size: 1.2em;
+        text-decoration: none;
+        color: black;
+      }
+    }
+  }
+}
+
+.selected {
+  border-bottom: 1px solid #e74c3c;
+}
+.selected-sub {
+  border-bottom: 1px solid #e74c3c;
+  font-size: 1.6em!important;
+}
+
+

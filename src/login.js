@@ -33,7 +33,7 @@ class Login extends React.Component {
     if (this.state.username !== "" && this.state.password !== "") {
       let self = this;
       axios
-        .post("/login", {
+        .post("http://localhost:5000/login", {
           username: this.state.username,
           password: this.state.password
         })
@@ -41,7 +41,7 @@ class Login extends React.Component {
           let userInfo = response.data[0];
           sessionStorage.setItem("user", userInfo.username);
           self.props.status(true);
-          self.props.history.push("/user");
+          self.props.history.push("/user/123");
         });
     }
   }

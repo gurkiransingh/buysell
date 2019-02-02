@@ -12,8 +12,11 @@ import Logout from "./logout";
 import Contact from "./contact-us";
 import AboutUs from "./about-us";
 import Process from "./process";
+import SubHeader from './sub-header'
+import Sell from './sell';
+import Buy from './buy';
 
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 class App extends React.Component {
   constructor(props) {
@@ -72,10 +75,27 @@ class App extends React.Component {
             />
           ) : null}
           <Route
-            path="/user"
+            path="/user/123"
+            component={SubHeader}
+            isLogged={this.state.isLogged}
+          />
+          <Switch>
+          <Route
+            exact path="/user/123"
             component={Profile}
             isLogged={this.state.isLogged}
           />
+          <Route
+            path="/user/123/sell"
+            component={Sell}
+            isLogged={this.state.isLogged}
+          />
+           <Route
+            path="/user/123/buy"
+            component={Buy}
+            isLogged={this.state.isLogged}
+          />
+          </Switch>
           <Route
             path="/contactUs"
             component={Contact}
