@@ -1,5 +1,4 @@
 import React from "react";
-import SellForm from './sell-form';
 
 class Sell extends React.Component {
   constructor(props) {
