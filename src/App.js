@@ -14,7 +14,7 @@ import AboutUs from "./about-us";
 import Process from "./process";
 import SubHeader from './sub-header'
 import Sell from './sell';
-import Buy from './buy';
+import Buy from './buy'
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 

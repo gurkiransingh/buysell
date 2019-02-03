@@ -12,7 +12,31 @@ class Profile extends React.Component {
   render() {
     return (
       <div className="profile-container">
-        <h1>Hello there guest !</h1>
+        <div className='welcome'>
+            <p>Welcome username</p>
+        </div>
+        <div className='main-body'>
+        <div className='profile'></div>
+        <div className='separator'></div>
+        <div className='stats'>
+          <div>
+            <p>0</p>
+            <p>Points</p>
+          </div>
+          <div>
+            <p>0</p>
+            <p>Orders</p>
+          </div>
+          <div>
+            <p>0</p>
+            <p>Returns</p>
+          </div>
+          <div>
+             <p>0</p>
+            <p>Something</p>
+          </div>
+        </div>
+        </div>
       </div>
     );
   }

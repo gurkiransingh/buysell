@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway:400,400i,700");
+@import url('https://fonts.googleapis.com/css?family=Pacifico');
 
 .container {
   display: flex;
@@ -481,7 +482,43 @@ header {
 }
 
 .profile-container {
+  padding: 0 5em;
   min-height: 100vh;
+  .welcome {
+    font-size: 1.7em;
+    font-family: 'Pacifico', cursive;
+  }
+  .main-body {
+    border: 1px solid red;
+    display: flex;
+    justify-content: space-between;
+    min-height: 50vh;
+    .profile {
+      border: 1px solid gray;
+      width: 45%;
+    }
+    .separator {
+      // border: 1px solid blue;
+      width: 0.2em;
+      height: 10em;
+      align-self: center;
+      background: #646464;
+    }
+    .stats {
+      border: 1px solid rebeccapurple;
+      width: 45%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      div {
+        width: 48%;
+        border: 1px solid red;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
 }
 
 
@@ -671,15 +708,24 @@ header {
     display: flex;
     justify-content: space-around;
     padding: 0.2em 0.5em;
-    button {
+    > div {
       background: transparent;
-      border: none;
-      outline: none;
       a {
         font-size: 1.2em;
         text-decoration: none;
         color: black;
       }
+    }
+  }
+  .right-links, .left-links {
+    border-bottom: 1px solid #e74c3c;
+    width: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    a {
+      text-decoration: none;
+      color: #161516;
     }
   }
 }
@@ -688,8 +734,5 @@ header {
   border-bottom: 1px solid #e74c3c;
 }
 .selected-sub {
-  border-bottom: 1px solid #e74c3c;
   font-size: 1.6em!important;
 }
-
-
