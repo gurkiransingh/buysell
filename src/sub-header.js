@@ -38,10 +38,10 @@ class SubHeader extends React.Component {
         </div>
         <div className='right-links'>
         <div>
-            <NavLink to=''>Update info</NavLink>
+            <NavLink to=''>Return/Exchange</NavLink>
         </div>
         <div>
-            <NavLink to=''>Security</NavLink>
+            <NavLink to=''>Update info</NavLink>
         </div>
         </div>
       </div>
