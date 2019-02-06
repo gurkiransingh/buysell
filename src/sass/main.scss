@@ -800,7 +800,14 @@ header {
     flex-direction: column;
     padding: 2em 5em;
     .filters {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 45%;
       margin-bottom: 2em;
+      label {
+        margin-right: 0.5em;
+      }
     }
     .items-container {
       display: flex;

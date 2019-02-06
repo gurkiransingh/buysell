@@ -5,6 +5,16 @@ class Buy extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      clothType: ['Featured', 'denim', 'western', 'ethnic', 'tops', 'shorts'],
+      clothTypeSelected: 'Featured',
+      priceType: ['Featured', 'low to high', 'high to low'],
+      priceTypeSelected: 'Featured'
+    }
+
+    this.handleTypeChange = this.handleTypeChange.bind(this);
+    this.handlePriceChange = this.handlePriceChange.bind(this);
+
     this.items = [
       {
         pic: 'https://picsum.photos/200/300',
@@ -76,12 +86,44 @@ class Buy extends React.Component {
   componentDidMount() {
   }
 
+  handleTypeChange(e) {
+    this.setState({
+      clothTypeSelected: e.target.value
+    })
+  }
+
+  handlePriceChange(e) {
+    this.setState({
+      priceTypeSelected: e.target.value
+    })
+  }
+
   render() {
     return (
       <div className="buy-flow">
         <div className='buy-container'>
           <div className='filters'>
-
+            <p className='sort-by'>Sort By:</p>
+            <div className='pair'>
+              <label>Type</label>
+              <select value={this.state.clothTypeSelected} onChange={this.handleTypeChange}>
+              {
+                this.state.clothType.map((v, i) => {
+                  return <option key={i} value={v} >{v}</option>
+                })
+              }
+            </select>
+          </div>
+          <div className='pair'>
+          <label>Price</label>
+            <select value={this.state.priceTypeSelected} onChange={this.handlePriceChange}>
+              {
+                this.state.priceType.map((v, i) => {
+                  return <option key={i} value={v}>{v}</option>
+                })
+              }
+            </select>
+          </div>
           </div>
           <Item items={this.items} />
         </div>
