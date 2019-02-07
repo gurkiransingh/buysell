@@ -14,7 +14,8 @@ import AboutUs from "./about-us";
 import Process from "./process";
 import SubHeader from './sub-header'
 import Sell from './sell';
-import Buy from './buy'
+import Buy from './buy';
+import ItemDetails from './item-details';
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -91,9 +92,17 @@ class App extends React.Component {
             isLogged={this.state.isLogged}
           />
            <Route
+            exact
             path="/user/123/buy"
-            component={Buy}
-            isLogged={this.state.isLogged}
+            component={props => (
+              <Buy {...props} isLogged={this.state.isLogged} />
+            )}
+          />
+          <Route
+            path='/user/123/buy/1234'
+            component={props => (
+              <ItemDetails {...props} isLogged={this.state.isLogged} />
+            )}
           />
           </Switch>
           <Route

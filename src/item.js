@@ -3,34 +3,33 @@ import React from 'react';
 class Item extends React.Component {
     constructor(props) {
         super(props);
+
+        this.openDetail = this.openDetail.bind(this);
+    }
+
+    openDetail() {
+        console.log(this.props);
+        this.props.history.push('/user/123/buy/1234');
     }
 
     componentDidMount() {
-        console.log(this.props);
     }
 
     render() {
         return (
-            <div className='items-container'>
-             { 
-                this.props.items.map((v,i) => {
-                return (<div className='item' key={i}>
-                    <img src={v.pic} alt="clothing" className='image' />
-                    <div className='desc'>
-                        <p className='name'>{v.name}
-                            {
-                            v.size.map((v)=> {
-                                return (<span>{v}</span>)
-                            })
-                            }
-                            </p>
-                        <p className='description'>{v.desc}</p>
-                        <p className='price'>Rs {v.price}</p>
-                    </div>
+            <div className='item' onClick={this.openDetail}>
+                <img src={this.props.item.pic} alt="clothing" className='image' />
+                <div className='desc'>
+                    <p className='name'>{this.props.item.name}
+                        {
+                        this.props.item.size.map((v, i)=> {
+                            return (<span key={i}>{v}</span>)
+                        })
+                        }
+                        </p>
+                    <p className='description'>{this.props.item.desc}</p>
+                    <p className='price'>Rs {this.props.item.price}</p>
                 </div>
-                )
-             })
-            }
             </div>
         )
     }

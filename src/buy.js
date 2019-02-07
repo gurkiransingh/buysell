@@ -84,6 +84,7 @@ class Buy extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.props.history);
   }
 
   handleTypeChange(e) {
@@ -125,7 +126,15 @@ class Buy extends React.Component {
             </select>
           </div>
           </div>
-          <Item items={this.items} />
+          <div className='items-container'>
+          {
+            this.items.map((v,i) => {
+              return (
+                <Item item={v} key={i} history={this.props.history}/>
+              )
+            })
+          }
+            </div>
         </div>
       </div>
     );
