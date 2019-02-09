@@ -14,7 +14,7 @@ class SubHeader extends React.Component {
       <div className="sub-header">
       <div className='left-links'>
         <div>
-            <NavLink to=''>Feedback</NavLink>
+            <NavLink to='/user/123/feedback' activeClassName='selected'>Feedback</NavLink>
         </div>
         <div>
             <NavLink to=''>Past orders</NavLink>

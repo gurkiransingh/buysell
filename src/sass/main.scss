@@ -812,15 +812,19 @@ header {
     .items-container {
       display: flex;
       flex-wrap: wrap;
+      justify-content: space-between;
       .item {
         overflow: hidden;
         cursor: pointer;
-        width: 25%;
-        .image {
-          transition-duration: 1s;
-          transition-timing-function: ease;
-          &:hover {
-            transform: scale(1.1);
+        .image-container {
+          overflow: hidden;
+          .image {
+            transition-duration: 1s;
+            transition-timing-function: ease;
+            transform-origin: 50% 50%;
+            &:hover {
+              transform: scale(1.5);
+            }
           }
         }
         .desc {
@@ -905,6 +909,30 @@ header {
         p:nth-child(2) {
           letter-spacing: 2px;
         }
+      }
+    }
+  }
+}
+
+.feedback-container {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2em 15em;
+  justify-content: center;
+  .feedback {
+    p.title {
+      margin: 0;
+      color: #C3000D;
+      font-size: 3em;
+      text-transform: capitalize;
+      text-align: center;
+    }
+    .form {
+      padding: 2em 2em;
+      display: flex;
+      flex-direction: column;
+      .order {
+        display: flex;
       }
     }
   }

@@ -79,6 +79,22 @@ class Buy extends React.Component {
         desc: 'Men striped sweater',
         price: 1000,
         size: ['M', 'L']
+      },
+      {
+        pic: 'https://picsum.photos/200/300',
+        type: 'denim',
+        name: 'Roadster',
+        desc: 'Men striped sweater',
+        price: 1000,
+        size: ['M', 'L']
+      },
+      {
+        pic: 'https://picsum.photos/200/300',
+        type: 'denim',
+        name: 'Roadster',
+        desc: 'Men striped sweater',
+        price: 1000,
+        size: ['M', 'L']
       }
     ]
   }

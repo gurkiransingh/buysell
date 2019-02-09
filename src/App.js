@@ -16,6 +16,7 @@ import SubHeader from './sub-header'
 import Sell from './sell';
 import Buy from './buy';
 import ItemDetails from './item-details';
+import Feedback from './feedback';
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -103,6 +104,11 @@ class App extends React.Component {
             component={props => (
               <ItemDetails {...props} isLogged={this.state.isLogged} />
             )}
+          />
+          <Route
+            path="/user/123/feedback"
+            component={Feedback}
+            isLogged={this.state.isLogged}
           />
           </Switch>
           <Route

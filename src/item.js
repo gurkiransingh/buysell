@@ -18,7 +18,9 @@ class Item extends React.Component {
     render() {
         return (
             <div className='item' onClick={this.openDetail}>
+                <div className='image-container'>
                 <img src={this.props.item.pic} alt="clothing" className='image' />
+                </div>
                 <div className='desc'>
                     <p className='name'>{this.props.item.name}
                         {
