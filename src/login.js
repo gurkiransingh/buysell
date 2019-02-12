@@ -33,16 +33,18 @@ class Login extends React.Component {
     if (this.state.username !== "" && this.state.password !== "") {
       let self = this;
       axios
-        .post("/login", {
+        .post("http://localhost:5000/login", {
           username: this.state.username,
           password: this.state.password
         })
         .then(function(response) {
           let userInfo = response.data[0];
-          sessionStorage.setItem("user", userInfo.username);
-          self.props.status(true);
-          self.props.history.push("/user/123");
-        });
+          console.log(response);
+          sessionStorage.setItem("userId", userInfo._id);
+          self.props.status(true, userInfo._id);
+          self.props.history.push(`/user/${userInfo._id}`);
+        })
+        .catch((error) => console.log(error));
     }
   }
 

@@ -9,7 +9,7 @@ class Item extends React.Component {
 
     openDetail() {
         console.log(this.props);
-        this.props.history.push('/user/123/buy/1234');
+        this.props.history.history.push(`/user/${this.props.history.match.params.id}/buy/1234`);
     }
 
     componentDidMount() {

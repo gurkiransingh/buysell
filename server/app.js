@@ -5,10 +5,10 @@ let express = require("express"),
   mongoose = require("mongoose"),
   bodyParser = require("body-parser"),
   User = require("./models/user"),
+  Order = require('./models/order'),
+  Item = require('./models/item'),
   LocalStrategy = require("passport-local"),
-  path = require('path'),
-  passportLocalMongoose = require("passport-local-mongoose");
-
+  path = require('path');
 const app = express();
 app.use(passport.initialize());
 
@@ -58,8 +58,7 @@ app.post("/register", function(req, res) {
       firstname: req.body.firstname,
       lastname: req.body.lastname,
       email: req.body.email,
-      dob: req.body.dob,
-      gender: req.body.gender,
+      pinCode: req.body.pinCode,
       username: req.body.username
     }),
     req.body.password,
@@ -82,21 +81,10 @@ app.post("/login", passport.authenticate("local"), function(req, res) {
   });
 });
 
-app.get("/profile", isLoggedIn, function(req, res) {
-  res.send("Weclome !");
-});
-
 app.get("/logout", function(req, res) {
   req.logOut();
   res.send("out");
 });
-
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.end("Login first !");
-}
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../dist/index.html"));

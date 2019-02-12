@@ -5,6 +5,9 @@ class Buy extends React.Component {
   constructor(props) {
     super(props);
 
+
+    console.log(this.props);
+    
     this.state = {
       clothType: ['Featured', 'denim', 'western', 'ethnic', 'tops', 'shorts'],
       clothTypeSelected: 'Featured',
@@ -146,7 +149,7 @@ class Buy extends React.Component {
           {
             this.items.map((v,i) => {
               return (
-                <Item item={v} key={i} history={this.props.history}/>
+                <Item item={v} key={i} history={this.props}/>
               )
             })
           }

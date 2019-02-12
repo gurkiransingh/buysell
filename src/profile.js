@@ -6,7 +6,6 @@ class Profile extends React.Component {
   }
 
   componentDidMount() {
-    // if (!this.props.isLogged) {}
   }
 
   render() {

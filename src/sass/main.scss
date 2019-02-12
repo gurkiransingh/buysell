@@ -921,7 +921,7 @@ header {
   justify-content: center;
   .feedback {
     p.title {
-      margin: 0;
+      margin-top: 0;
       color: #C3000D;
       font-size: 3em;
       text-transform: capitalize;
@@ -931,8 +931,24 @@ header {
       padding: 2em 2em;
       display: flex;
       flex-direction: column;
-      .order {
-        display: flex;
+      height: 15em;
+      justify-content: space-between;
+      textarea {
+        height: 10em;
+      }
+      button {
+        border: 1px solid #C3000D;
+        color: #161516;
+        cursor: pointer;
+        span {
+          display: inline-block;
+          padding: 0.5em;
+          font-size: 1.2em;
+        }
+        &:hover {
+          background-color: #C3000D;
+          color: #ecf0f1;
+        }
       }
     }
   }
@@ -950,4 +966,6 @@ header {
 }
 .selected-sub {
   font-size: 1.6em!important;
+  background-color: #C3000D;
+  color: #ecf0f1!important;
 }

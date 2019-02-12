@@ -2,7 +2,6 @@
 import React from "react";
 import axios from "axios";
 import { navigate } from "@reach/router/lib/history";
-import { redirectTo } from "@reach/router";
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -14,15 +13,13 @@ class SignUp extends React.Component {
     this.handleFirstname = this.handleFirstname.bind(this);
     this.handleLastname = this.handleLastname.bind(this);
     this.handleEmail = this.handleEmail.bind(this);
-    this.handleDob = this.handleDob.bind(this);
-    this.handleGender = this.handleGender.bind(this);
+    this.handlePin = this.handlePin.bind(this);
 
     this.state = {
       firstname: "",
       lastname: "",
       email: "",
-      dob: "",
-      gender: "",
+      pinCode: "",
       username: "",
       password: ""
     };
@@ -42,14 +39,9 @@ class SignUp extends React.Component {
       email: event.target.value
     });
   }
-  handleDob(event) {
+  handlePin(event) {
     this.setState({
-      dob: event.target.value
-    });
-  }
-  handleGender(event) {
-    this.setState({
-      gender: event.target.value
+      pinCode: event.target.value
     });
   }
   handleUsername(event) {
@@ -69,12 +61,11 @@ class SignUp extends React.Component {
     event.preventDefault();
     if (this.state.username !== "" && this.state.password !== "") {
       axios
-        .post("/register", {
+        .post("http://localhost:5000/register", {
           firstname: this.state.firstname,
           lastname: this.state.lastname,
           email: this.state.email,
-          dob: this.state.dob,
-          gender: this.state.gender,
+          pinCode: this.state.pinCode,
           username: this.state.username,
           password: this.state.password
         })
@@ -122,13 +113,13 @@ class SignUp extends React.Component {
                   required
                 />
               </label>
-              <label htmlFor="dob">
-                Birthday
+              <label htmlFor="pinCode">
+                Pin Code
                 <br />
                 <input
-                  type="date"
-                  placeholder="Date of Birth"
-                  onChange={this.handleDob}
+                  type="number"
+                  placeholder='Enter your area code'
+                  onChange={this.handlePin}
                   required
                 />
               </label>
@@ -155,30 +146,6 @@ class SignUp extends React.Component {
                 />
               </label>
               <br />
-              <div className="gender">
-                <span>
-                  <input
-                    type="radio"
-                    value="female"
-                    checked={this.state.gender === "female"}
-                    onChange={this.handleGender}
-                  />
-                  <label htmlFor="female">
-                    <i className="fa fa-female" />
-                  </label>
-                </span>
-                <span>
-                  <input
-                    type="radio"
-                    value="male"
-                    checked={this.state.gender === "male"}
-                    onChange={this.handleGender}
-                  />
-                  <label htmlFor="male">
-                    <i className="fa fa-male" />
-                  </label>
-                </span>
-              </div>
             </div>
 
             <button onClick={this.signUp}>

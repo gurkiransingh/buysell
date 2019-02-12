@@ -7,14 +7,14 @@ class SubHeader extends React.Component {
   }
 
   componentDidMount() {
-    // if (!this.props.isLogged) {}
+
   }
   render() {
     return (
       <div className="sub-header">
       <div className='left-links'>
-        <div>
-            <NavLink to='/user/123/feedback' activeClassName='selected'>Feedback</NavLink>
+      <div>
+            <NavLink to={`/user/${this.props.match.params.id}/feedback`} activeClassName='selected'>Feedback</NavLink>
         </div>
         <div>
             <NavLink to=''>Past orders</NavLink>
@@ -23,14 +23,14 @@ class SubHeader extends React.Component {
         <div className='links'>
         <div>
         <NavLink
-            to='/user/123/sell'
+            to={`/user/${this.props.match.params.id}/sell`}
             activeClassName='selected-sub'>
             Sell
         </NavLink>
         </div>
         <div>
         <NavLink
-            to='/user/123/buy'
+            to={`/user/${this.props.match.params.id}/buy`}
             activeClassName='selected-sub'>
             Buy
         </NavLink>

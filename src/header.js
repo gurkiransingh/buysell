@@ -5,10 +5,9 @@ import { NavLink } from "react-router-dom";
 class Header extends React.Component {
   constructor(props) {
     super(props);
+  }
 
-    this.state = {
-      isLogged: false
-    };
+  componentDidMount() {
   }
 
   render() {
@@ -22,15 +21,15 @@ class Header extends React.Component {
           </div>
           <div className="links">
             <div className="user-menu">
-              {this.props.status && (
+              {this.props.isLogged && (
                 <div>
                   <NavLink 
-                    to="/user/123"
+                    to={`/user/${this.props.userId}`}
                     activeClassName='selected'
                     >My Profile</NavLink>
                 </div>
               )}
-              {!this.props.status && (
+              {!this.props.isLogged && (
                 <div>
                   <NavLink 
                     to="/process"
@@ -56,14 +55,14 @@ class Header extends React.Component {
           </div>
           <div className="on-off-links">
             <div className="login-status">
-              {!this.props.status && (
+              {!this.props.isLogged && (
                 <div className="sign-on">
                   <NavLink to="/login" state={{ action: "login" }}>
                     Login
                   </NavLink>
                 </div>
               )}
-              {this.props.status && (
+              {this.props.isLogged && (
                 <div className="sign-off">
                   <NavLink to="/logout">
                     <i className="fa fa-sign-out-alt" />

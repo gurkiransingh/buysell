@@ -7,16 +7,11 @@ import HomePage from "./content";
 import Footer from "./footer";
 import Login from "./login";
 import SignUp from "./signup";
-import Profile from "./profile";
 import Logout from "./logout";
 import Contact from "./contact-us";
 import AboutUs from "./about-us";
 import Process from "./process";
-import SubHeader from './sub-header'
-import Sell from './sell';
-import Buy from './buy';
-import ItemDetails from './item-details';
-import Feedback from './feedback';
+import UserProfile from './userProfile';
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -25,24 +20,31 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      isLogged: false
+      isLogged: false,
+      userId: null
     };
 
     this.changeStatus = this.changeStatus.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+
   }
 
-  componentDidMount() {
-    if (sessionStorage.getItem("user") != null) {
-      this.setState({ isLogged: true });
+  componentWillMount() {
+    if (sessionStorage.getItem("userId") != null) {
+      this.userId = sessionStorage.getItem("userId");
+      this.setState({ 
+        isLogged: true ,
+        userId: sessionStorage.getItem("userId")
+      }, () => console.log('hi'));
     } else {
-      this.setState({ isLogged: false });
+      this.setState({ isLogged: false, userId: null });
     }
   }
 
-  changeStatus(bool) {
+  changeStatus(bool, id) {
     this.setState({
-      isLogged: bool
+      isLogged: bool,
+      userId: id
     });
   }
 
@@ -55,7 +57,12 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <div className="container">
-          <Header path="/" status={this.state.isLogged} />
+          <Route 
+            path='/' 
+            component={props => (
+              <Header {...props} userId={this.state.userId} isLogged={this.state.isLogged} />
+            )}
+            />
           <Route exact path="/" component={HomePage} />
           <Route
             path="/login"
@@ -76,41 +83,12 @@ class App extends React.Component {
               )}
             />
           ) : null}
-          <Route
-            path="/user/123"
-            component={SubHeader}
-            isLogged={this.state.isLogged}
-          />
-          <Switch>
-          <Route
-            exact path="/user/123"
-            component={Profile}
-            isLogged={this.state.isLogged}
-          />
-          <Route
-            path="/user/123/sell"
-            component={Sell}
-            isLogged={this.state.isLogged}
-          />
-           <Route
-            exact
-            path="/user/123/buy"
-            component={props => (
-              <Buy {...props} isLogged={this.state.isLogged} />
+          <Route 
+            path='/user/:id' 
+             component={props => (
+            <UserProfile {...props} isLogged={this.state.isLogged} userId={this.state.userId} />
             )}
-          />
-          <Route
-            path='/user/123/buy/1234'
-            component={props => (
-              <ItemDetails {...props} isLogged={this.state.isLogged} />
-            )}
-          />
-          <Route
-            path="/user/123/feedback"
-            component={Feedback}
-            isLogged={this.state.isLogged}
-          />
-          </Switch>
+            />
           <Route
             path="/contactUs"
             component={Contact}
