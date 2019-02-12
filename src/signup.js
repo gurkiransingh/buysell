@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React from "react";
 import axios from "axios";
-import { navigate } from "@reach/router/lib/history";
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -61,7 +60,7 @@ class SignUp extends React.Component {
     event.preventDefault();
     if (this.state.username !== "" && this.state.password !== "") {
       axios
-        .post("http://localhost:5000/register", {
+        .post("/register", {
           firstname: this.state.firstname,
           lastname: this.state.lastname,
           email: this.state.email,
