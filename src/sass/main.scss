@@ -818,12 +818,31 @@ header {
         cursor: pointer;
         .image-container {
           overflow: hidden;
+          position: relative;
           .image {
             transition-duration: 1s;
             transition-timing-function: ease;
             transform-origin: 50% 50%;
             &:hover {
               transform: scale(1.5);
+            }
+          }
+          .pseudo-hover {
+            position: absolute;
+            bottom: 0;
+            height: 2em;
+            width: 100%;
+            background-color: #C3000D;
+            color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity ease-in-out 1s;
+          }
+          &:hover {
+            .pseudo-hover {
+              opacity: 1;
             }
           }
         }
