@@ -4,10 +4,17 @@ import { NavLink } from "react-router-dom";
 class SubHeader extends React.Component {
   constructor(props) {
     super(props);
+
+    this.goToCart = this.goToCart.bind(this);
+    this.cartItems = 0;
   }
 
   componentDidMount() {
 
+  }
+
+  goToCart() {
+    this.props.history.push(`/user/${this.props.match.params.id}/cart`);
   }
   render() {
     return (
@@ -43,6 +50,10 @@ class SubHeader extends React.Component {
         <div>
             <NavLink to=''>Update info</NavLink>
         </div>
+        </div>
+        <div className='cart' onClick={this.goToCart}>
+        <p><i className="fas fa-shopping-cart"></i></p>
+        <span>{this.props.id}</span>
         </div>
       </div>
     );

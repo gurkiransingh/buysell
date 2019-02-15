@@ -35,7 +35,7 @@ class App extends React.Component {
       this.setState({ 
         isLogged: true ,
         userId: sessionStorage.getItem("userId")
-      }, () => console.log('hi'));
+      });
     } else {
       this.setState({ isLogged: false, userId: null });
     }

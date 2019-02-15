@@ -2,14 +2,12 @@ let mongoose = require("mongoose"),
   passportLocalMongoose = require("passport-local-mongoose");
 
 let ItemSchema = new mongoose.Schema({
+    type: String,
     name: String,
     desc: String,
-    date_created: Date,
-    pics: [String],
+    pic: String,
     size: [String],
     price: Number,
 })
-
-ItemSchema.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('Item', ItemSchema);

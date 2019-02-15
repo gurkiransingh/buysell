@@ -6,17 +6,56 @@ import ItemDetails from './item-details';
 import Feedback from './feedback';
 import Profile from "./profile";
 import SubHeader from './sub-header';
+import Cart from './cart';
+import Axios from 'axios';
 
 class UserProfile extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            id: 0,
+            cartItems: null
+        }
+
+        this.addToCart = this.addToCart.bind(this);
+        this.deleteFromCart = this.deleteFromCart.bind(this);
+        this.getCartItems = this.getCartItems.bind(this);
+
+        this.x = 0;
+
+    }
+
+    addToCart() {
+        this.getCartItems();
+    }
+
+    deleteFromCart() {
+        this.x = this.state.id -1;
+        this.setState({
+            id: this.x
+        })
     }
 
     componentDidMount() {
-        console.log(this.props);
+        let self = this;
         if (!this.props.isLogged && !this.props.userId) {
             this.props.history.push('/login');
           }
+        this.getCartItems();
+    }
+
+    getCartItems() {
+        let self = this;
+        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
+        .then(function(res) {
+            console.log(res.data);
+            console.log(typeof(res.data))
+            self.setState({
+                id: res.data.length,
+                cartItems: res.data
+            })
+        });
     }
     render() {
         return (
@@ -24,7 +63,7 @@ class UserProfile extends React.Component {
              <Route
                 path={this.props.match.path}
                 component={props => (
-                <SubHeader {...props} />
+                <SubHeader {...props} id={this.state.id}/>
                 )}
               />
                 <Route
@@ -43,13 +82,19 @@ class UserProfile extends React.Component {
                     )}
                 />
                 <Route
-                    path={`${this.props.match.path}/buy/1234`}
+                    path={`${this.props.match.path}/buy/:id`}
                     component={props => (
-                    <ItemDetails {...props}/>
+                    <ItemDetails {...props} itemsInCart={this.state.id} addToCart={this.addToCart} userId={this.props.userId} />
                     )}
                 />
                 <Route
-                path={`${this.props.match.path}/feedback`}
+                    path={`${this.props.match.path}/cart`}
+                    component={props => (
+                    <Cart {...props} getCartItems={this.getCartItems} cartItems={this.state.cartItems} userId={this.props.userId} />
+                    )}
+                />
+                <Route
+                    path={`${this.props.match.path}/feedback`}
                     component={Feedback}
                 />
             </div>

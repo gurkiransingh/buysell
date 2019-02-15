@@ -13,7 +13,7 @@ const app = express();
 app.use(passport.initialize());
 
 mongoose.connect(
-  "mongodb://gurkiran:Eldorado1@ds163354.mlab.com:63354/playground"
+  "mongodb://gurkiran:Eldorado1@ds223015.mlab.com:23015/playground"
 );
 
 app.use(bodyParser.json());
@@ -85,6 +85,59 @@ app.get("/logout", function(req, res) {
   req.logOut();
   res.send("out");
 });
+
+app.get('/getAllItems', function(req, res) {
+  Item.find({}, function(err, items) {
+    res.json(items);
+  })
+})
+
+app.post('/pushtocart', function(req, res) {
+  User.findOne({_id: req.body.custId}, function(err, foundUser) {
+    if(err) {
+      console.log(err);
+    } else {
+      if (foundUser.cart_items.indexOf(req.body.itemId) === -1) {
+        foundUser.cart_items.push(req.body.itemId);
+        foundUser.save(function(err, user) {
+          if (err) { console.log(err); }
+          else {
+            res.json(true);
+          }
+        })
+      } else {
+        res.json(false)
+      }
+    }
+  })
+});
+
+app.post('/getCartItems', function(req, res) {
+  User.findOne({_id: req.body.custId}, function(err, foundUser) {
+    if (err) { console.log(err); }
+    else {
+      Item.find({_id : { $in: foundUser.cart_items}}, function(err, items) {
+        if (err) {console.log(err);}
+        else {
+          res.json(items);
+        }
+      });
+    }
+  })
+})
+
+app.post('/deleteItemFromCart', function(req, res) {
+  User.findOne({_id: req.body.custId}, function(err, foundUser) {
+    if (err) {console.log(err);}
+    else {
+      let index = foundUser.cart_items.indexOf(req.body.itemId);
+      foundUser.cart_items.splice(index, 1);
+      foundUser.save(function(err, user) {
+        res.json(true);
+      })
+    }
+  })
+})
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../dist/index.html"));
