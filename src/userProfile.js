@@ -47,7 +47,7 @@ class UserProfile extends React.Component {
 
     getCartItems() {
         let self = this;
-        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
+        Axios.post('/getCartItems', {custId: this.props.userId})
         .then(function(res) {
             console.log(res.data);
             console.log(typeof(res.data))

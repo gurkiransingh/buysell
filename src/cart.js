@@ -15,7 +15,7 @@ class Cart extends React.Component {
 
     componentDidMount() {
         let self = this;
-        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
+        Axios.post('/getCartItems', {custId: this.props.userId})
         .then(function(res) {
             self.setState({
                 cartItems: res.data
@@ -27,7 +27,7 @@ class Cart extends React.Component {
     fetchUpdated(item) {
         console.log(item);
         let self = this;
-        Axios.post('http://localhost:5000/deleteItemFromCart', {custId: this.props.userId, itemId: item._id})
+        Axios.post('/deleteItemFromCart', {custId: this.props.userId, itemId: item._id})
             .then(function(res) {
                 console.log(res);
                 if(res.data === true) {

@@ -519,6 +519,7 @@ header {
         color: white;
         background: #e74c3c;
         margin-bottom: 1em;
+        transition: 0.5s transform ease-in;
         p:first-child {
           font-size: 2em;
           margin: 0.7em;
@@ -540,6 +541,9 @@ header {
         &:nth-child(4) {
           background-color: #FA9800;
           margin-bottom: 0;
+        }
+        &:hover {
+          transform: scale(1.1);
         }
       }
     }
@@ -789,6 +793,11 @@ header {
       }
       .header:not(:last-child) {
         margin-bottom: 0.5em;
+      }
+      .header:first-child {
+        border-bottom: 1px solid #F34336;
+        padding-bottom: 1em;
+        margin-bottom: 1em;
       }
       .submit-sell {
         margin-top: 1em;
