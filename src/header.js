@@ -24,7 +24,7 @@ class Header extends React.Component {
               {this.props.isLogged && (
                 <div>
                   <NavLink 
-                    to={`/user/${this.props.userId}`}
+                    to={`/user/${this.props.userId}/profile`}
                     activeClassName='selected'
                     >My Profile</NavLink>
                 </div>

@@ -39,7 +39,6 @@ class Login extends React.Component {
         })
         .then(function(response) {
           let userInfo = response.data[0];
-          console.log(response);
           sessionStorage.setItem("userId", userInfo._id);
           self.props.status(true, userInfo._id);
           self.props.history.push(`/user/${userInfo._id}`);

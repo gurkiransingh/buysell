@@ -4,7 +4,6 @@ import { NavLink } from "react-router-dom";
 class SubHeader extends React.Component {
   constructor(props) {
     super(props);
-
     this.goToCart = this.goToCart.bind(this);
     this.cartItems = 0;
   }
@@ -24,7 +23,7 @@ class SubHeader extends React.Component {
             <NavLink to={`/user/${this.props.match.params.id}/feedback`} activeClassName='selected'>Feedback</NavLink>
         </div>
         <div>
-            <NavLink to=''>Past orders</NavLink>
+            <NavLink to={`/user/${this.props.match.params.id}/orders`}>Past orders</NavLink>
         </div>
       </div>
         <div className='links'>
@@ -45,10 +44,10 @@ class SubHeader extends React.Component {
         </div>
         <div className='right-links'>
         <div>
-            <NavLink to=''>Return/Exchange</NavLink>
+            <NavLink to={`/user/${this.props.match.params.id}/returnExcahnge`}>Return/Exchange</NavLink>
         </div>
         <div>
-            <NavLink to=''>Update info</NavLink>
+            <NavLink to={`/user/${this.props.match.params.id}/updateInfo`}>Update info</NavLink>
         </div>
         </div>
         <div className='cart' onClick={this.goToCart}>

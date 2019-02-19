@@ -7,7 +7,11 @@ import Feedback from './feedback';
 import Profile from "./profile";
 import SubHeader from './sub-header';
 import Cart from './cart';
+import UpdateInfo from './update-info';
+import Orders from './orders';
+import ReturnExchange from './returnExcahnge';
 import Axios from 'axios';
+
 
 class UserProfile extends React.Component {
     constructor(props) {
@@ -15,12 +19,15 @@ class UserProfile extends React.Component {
 
         this.state = {
             id: 0,
-            cartItems: null
+            cartItems: null,
+            personal: null,
+            address: null
         }
 
         this.addToCart = this.addToCart.bind(this);
         this.deleteFromCart = this.deleteFromCart.bind(this);
         this.getCartItems = this.getCartItems.bind(this);
+        this.getuserData = this.getuserData.bind(this);
 
         this.x = 0;
 
@@ -43,20 +50,52 @@ class UserProfile extends React.Component {
             this.props.history.push('/login');
           }
         this.getCartItems();
+        this.getuserData();
     }
+
 
     getCartItems() {
         let self = this;
         Axios.post('/getCartItems', {custId: this.props.userId})
         .then(function(res) {
-            console.log(res.data);
-            console.log(typeof(res.data))
             self.setState({
                 id: res.data.length,
                 cartItems: res.data
             })
         });
     }
+
+    getuserData(fromUpdate) {
+        let self = this;
+        Axios.post('/getUserDetails', {userId: this.props.match.params.id})
+        .then(function(res) {
+            let personal = {
+                firstName: res.data.firstname,
+                lastName: res.data.lastname,
+                email: res.data.email,
+                number: res.data.phone
+            }
+            let address = {
+                addr1: res.data.addr1,
+                addr2: res.data.addr2,
+                city: res.data.city,
+                zip: res.data.pinCode,
+                state: res.data.state
+            }
+            self.setState({
+                personal: personal,
+                address: address
+            }, () => { 
+                console.log(self.props.history);
+                if(fromUpdate) {
+                    self.props.history.replace(`/user/${self.props.userId}/profile`);
+                }else {
+                    self.props.history.push(`${self.props.userId}/profile`);
+                }
+            })
+        })
+    }
+
     render() {
         return (
             <div>
@@ -67,8 +106,10 @@ class UserProfile extends React.Component {
                 )}
               />
                 <Route
-                    exact path={this.props.match.path}
-                    component={Profile}
+                     path={`${this.props.match.path}/profile`}
+                    component={props => (
+                        <Profile {...props}  pInfo={this.state.personal} />
+                        )}
                 />
                 <Route
                     path={`${this.props.match.path}/sell`}
@@ -96,6 +137,24 @@ class UserProfile extends React.Component {
                 <Route
                     path={`${this.props.match.path}/feedback`}
                     component={Feedback}
+                />
+                <Route
+                    path={`${this.props.match.path}/updateInfo`}
+                    component={props => (
+                    <UpdateInfo {...props} pInfo={this.state.personal} aInfo={this.state.address} getUserInfo={this.getuserData} userId={this.props.userId} />
+                    )}
+                />
+                 <Route
+                    path={`${this.props.match.path}/orders`}
+                    component={props => (
+                    <Orders {...props} userId={this.props.userId} />
+                    )}
+                />
+                <Route
+                    path={`${this.props.match.path}/returnExchange`}
+                    component={props => (
+                    <ReturnExchange {...props} userId={this.props.userId} />
+                    )}
                 />
             </div>
         )

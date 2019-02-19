@@ -139,6 +139,53 @@ app.post('/deleteItemFromCart', function(req, res) {
   })
 })
 
+app.post('/changePersonalChanges', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    if (err) {console.log(err);}
+    else {
+      Object.assign(foundUser, {
+        firstname: req.body.personal.firstName,
+        lastname: req.body.personal.lastName,
+        email: req.body.personal.email,
+        phone: req.body.personal.number
+      });
+      foundUser.save(function(err, updateduser) {
+        if(err) {console.log(err);}
+        else {
+          res.json(updateduser);
+        }
+      })
+    }
+  })
+});
+
+app.post('/changeAddressChanges', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    if (err) {console.log(err);}
+    else {
+      Object.assign(foundUser, {
+        addr1: req.body.address.addr1,
+        addr2: req.body.address.addr2,
+        city: req.body.address.city,
+        state: req.body.address.state,
+        zip: req.body.address.zip
+      });
+      foundUser.save(function(err, updateduser) {
+        if(err) {console.log(err);}
+        else {
+          res.json(updateduser);
+        }
+      })
+    }
+  })
+});
+
+app.post('/getUserDetails', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    res.json(foundUser);
+  });
+}); 
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../dist/index.html"));
 });

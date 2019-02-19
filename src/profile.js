@@ -1,12 +1,13 @@
 import React from "react";
+import Axios from 'axios';
 
 class Profile extends React.Component {
   constructor(props) {
     super(props);
-  }
 
-  componentDidMount() {
-  }
+    this.state = this.props.pInfo;
+  } 
+
 
   render() {
     return (
@@ -16,10 +17,10 @@ class Profile extends React.Component {
         </div>
         <div className='main-body'>
         <div className='profile'>
-          <p><i class="fas fa-signature"></i>John Doe</p>
-          <p><i class="fas fa-location-arrow"></i>111 Canal Street, NY , 11022</p>
-          <p><i class="fas fa-at"></i>johndoe@doe.com</p>
-          <p><i class="fas fa-phone-volume"></i>9898981234</p>
+          <p><i className="fas fa-signature"></i>{`${this.state.firstName} ${this.state.lastName}`}</p>
+          <p><i className="fas fa-location-arrow"></i>111 Canal Street, NY , 11022</p>
+          <p><i className="fas fa-at"></i>{`${this.state.email}`}</p>
+          <p><i className="fas fa-phone-volume"></i>{`${this.state.number}`}</p>
         </div>
         <div className='separator'></div>
         <div className='stats'>
