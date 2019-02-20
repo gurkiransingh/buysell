@@ -56,7 +56,7 @@ class UserProfile extends React.Component {
 
     getCartItems() {
         let self = this;
-        Axios.post('/getCartItems', {custId: this.props.userId})
+        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
         .then(function(res) {
             self.setState({
                 id: res.data.length,
@@ -67,7 +67,7 @@ class UserProfile extends React.Component {
 
     getuserData(fromUpdate) {
         let self = this;
-        Axios.post('/getUserDetails', {userId: this.props.match.params.id})
+        Axios.post('http://localhost:5000/getUserDetails', {userId: this.props.match.params.id})
         .then(function(res) {
             let personal = {
                 firstName: res.data.firstname,
@@ -85,14 +85,7 @@ class UserProfile extends React.Component {
             self.setState({
                 personal: personal,
                 address: address
-            }, () => { 
-                console.log(self.props.history);
-                if(fromUpdate) {
-                    self.props.history.replace(`/user/${self.props.userId}/profile`);
-                }else {
-                    self.props.history.push(`${self.props.userId}/profile`);
-                }
-            })
+            });
         })
     }
 
@@ -106,7 +99,7 @@ class UserProfile extends React.Component {
                 )}
               />
                 <Route
-                     path={`${this.props.match.path}/profile`}
+                    exact path={`${this.props.match.path}`}
                     component={props => (
                         <Profile {...props}  pInfo={this.state.personal} />
                         )}
