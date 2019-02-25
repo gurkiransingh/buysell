@@ -59,7 +59,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
+let port = process.env.PORT || 5001;
 // eslint-disable-next-line no-unused-vars
 
 app.post("/register", function(req, res) {
@@ -289,4 +289,4 @@ app.get("*", (req, res) => {
 });
 
 
-app.listen(5000, () => console.log(`Example app listening on port 5000!`));
+app.listen(port, () => console.log(`Example app listening on port 5000!`));
