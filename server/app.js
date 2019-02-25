@@ -234,7 +234,7 @@ app.post('/getSellOrders', function(req, res) {
 app.post('/makePayloadForPaytm', function(req, res) {
   let fResult;
   let paramlist = {
-    ORDER_ID: '7',
+    ORDER_ID: '8',
     CUST_ID: '2',
     MOBILE_NO: '9417392969',
     INDUSTRY_TYPE_ID: 'Retail',
