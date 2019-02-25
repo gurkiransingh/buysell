@@ -3,14 +3,26 @@
 let express = require("express"),
   passport = require("passport"),
   mongoose = require("mongoose"),
+  Json = require('circular-json'),
   bodyParser = require("body-parser"),
   User = require("./models/user"),
   Order = require('./models/order'),
   Item = require('./models/item'),
   LocalStrategy = require("passport-local"),
-  path = require('path');
+  path = require('path'),
+  // fs = require('fs'),
+  Sell = require('./models/sellOrder');
+
+
+let checksum = require('./checksum');
 const app = express();
-app.use(passport.initialize());
+
+app.set('views', __dirname + '/views');
+app.set('view engine', 'ejs');
+
+// let https = require('https');
+// var privateKey = fs.readFileSync(path.join(__dirname + "/../https/key.pem"));
+// var certificate = fs.readFileSync(path.join(__dirname + "/../https/cert.pem"));
 
 mongoose.connect(
   "mongodb://gurkiran:Eldorado1@ds223015.mlab.com:23015/playground"
@@ -31,9 +43,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+
 
 app.use(
   require("express-session")({
@@ -42,13 +52,13 @@ app.use(
     saveUninitialized: false
   })
 );
-
+app.use(passport.initialize());
 app.use(passport.session());
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 5000;
-}
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 
 // eslint-disable-next-line no-unused-vars
 
@@ -85,6 +95,10 @@ app.get("/logout", function(req, res) {
   req.logOut();
   res.send("out");
 });
+
+app.get('/haha', function(req, res) {
+  console.log(req);
+})
 
 app.get('/getAllItems', function(req, res) {
   Item.find({}, function(err, items) {
@@ -186,8 +200,93 @@ app.post('/getUserDetails', function(req, res) {
   });
 }); 
 
+app.post('/createSellOrder', function(req, res) {
+  let data = {
+    custId: req.body.userId,
+    thought: req.body.thought,
+    data: req.body.data
+  }
+
+  Sell.create(data, function(err, letsc) {
+    if(err) {console.log(err);}
+    else {
+      User.findOne({_id: req.body.userId}, function(err, foundUser) {
+        if(err) {console.log(err);}
+        foundUser.sellOrders.push(letsc);
+        foundUser.save(function(err, user) {
+          if(err) {console.log(err);}
+          else {
+            res.json(letsc);
+          }
+        })
+      })
+    }
+  })
+});
+
+app.post('/getSellOrders', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    if(err) {console.log(err);}
+    res.json(foundUser.sellOrders);
+  })
+});
+
+app.post('/makePayloadForPaytm', function(req, res) {
+  let fResult;
+  let paramlist = {
+    ORDER_ID: '7',
+    CUST_ID: '2',
+    MOBILE_NO: '9417392969',
+    INDUSTRY_TYPE_ID: 'Retail',
+    CHANNEL_ID: 'WEB',
+    TXN_AMOUNT: '1',
+    MID: 'AvXMpM68578606838453',
+    WEBSITE: 'WEBSTAGING',
+    PAYTM_MERCHANT_KEY: 'g1E6CnTz&1Hhc%dN'
+  }
+  var paramarray = new Array();
+  for (name in paramlist)
+        {
+          if (name == 'PAYTM_MERCHANT_KEY') {
+               var PAYTM_MERCHANT_KEY = paramlist[name] ; 
+            }else
+            {
+            paramarray[name] = paramlist[name] ;
+            }
+        }
+        paramarray['CALLBACK_URL'] = '/responseFromPaytm';
+        checksum.genchecksum(paramarray, PAYTM_MERCHANT_KEY, function(result){
+          let obj = { }
+          for (var key in result) {
+            obj[key] = result[key]
+          }
+          res.json(obj);
+        })
+})
+
+app.post('/responseFromPaytm',function(req, res) {
+  console.log('in response api');
+  var paramlist = req.body;
+  console.log(paramlist);
+  if(checksum.verifychecksum(paramlist, 'g1E6CnTz&1Hhc%dN'))
+  {
+    console.log("true");
+    res.render('success.ejs',{ 'restdata' : "true" ,'paramlist' : paramlist});
+  }else
+  {
+     console.log("false");
+     res.render('failure.ejs',{ 'restdata' : "false" , 'paramlist' : paramlist});
+  };
+})
+
+app.get('/goToSPA', function(req, res) {
+  console.log('here');
+  res.sendFile(path.join(__dirname + "/../dist/index.html"));
+});
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../dist/index.html"));
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+app.listen(5000, () => console.log(`Example app listening on port 5000!`));

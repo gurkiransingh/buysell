@@ -185,6 +185,7 @@ class UpdateInfo extends React.Component {
                                  (<button onClick={this.handlePersonalChanges}>Save Changes</button>)
                         }
                     </div>
+                    <div className='separator'></div>
                     <div>
                         <div className='header'>
                         <i className="fas fa-location-arrow"></i><span>Mailing Address</span>
@@ -216,10 +217,6 @@ class UpdateInfo extends React.Component {
                                 (<button onClick={this.enableAddress}>Edit</button>) :
                                  (<button onClick={this.handleAddressChanges}>Save Changes</button>)
                         }
-                    </div>
-                   
-                    <div className='header'>
-                    <i className="fas fa-lock"></i><span>Security ( To - do )</span>
                     </div>
                 </div>
             </div>

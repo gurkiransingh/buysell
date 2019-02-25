@@ -20,6 +20,10 @@ let UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order'
   }],
+  sellOrders: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'sellOrder'
+  }],
   cart_items: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Item'

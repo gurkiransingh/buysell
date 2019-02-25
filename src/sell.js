@@ -1,4 +1,5 @@
 import React from "react";
+import Axios from 'axios';
 
 class Sell extends React.Component {
   constructor(props) {
@@ -15,12 +16,15 @@ class Sell extends React.Component {
         {'clothType' :'Western', 'price':  50, 'quantity': 0},
         {'clothType' :'Shorts', 'price':  50, 'quantity': 0}
       ],
-      totalSum: 0
+      totalSum: 0,
+      sellOrders: []
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputFocus = this.handleInputFocus.bind(this);
+    this.placeSellOrder = this.placeSellOrder.bind(this);
+    this.checkauth = this.checkauth.bind(this);
 
   }
 
@@ -36,9 +40,27 @@ class Sell extends React.Component {
     this.submit.current.style.display = 'block';
   }
 
+  placeSellOrder() {
+    let self = this;
+    let map = this.state.clothingTypes.filter((v, i) => {
+      return delete v.price
+    })
+    Axios.post('/createSellOrder', {userId: this.props.userId , data: map, thought: this.state.totalSum})
+      .then(function(res) {
+        console.log(res.data);
+      })
+  }
+
 
   componentDidMount() {
+    let self = this;
     this.submit.current.style.display = 'none';
+    Axios.post('/getSellOrders', {userId: this.props.userId})
+      .then(function(res) {
+        self.setState({
+          sellOrders: res.data
+        })
+      });
   }
 
   handleInputChange(e,clothType) {
@@ -90,15 +112,24 @@ class Sell extends React.Component {
       <p></p>
       </div>
       <div className='submit-sell'>
-        <p ref={this.submit}>Place pick-up request</p>
+        <p ref={this.submit} onClick={this.placeSellOrder}>Place pick-up request</p>
         <p ref={this.finish} onClick={this.handleSubmit}>Click when finish adding</p>
       </div>
       </div>
       <div className='separator'></div>
       <div className='info'>
-        <p>Total Estimated amount you will be getting : <span>Rs {this.state.totalSum}</span></p>
-        <p>Estimated time for pick-up : <span>2.5 hours</span></p>
-        <p>Status : Pick-up</p>
+        <div>
+          <p>Total Estimated amount you will be getting : <span>Rs {this.state.totalSum}</span></p>
+          <p>Estimated time for pick-up : <span>2.5 hours</span></p>
+          <p>Status : Pick-up</p>
+        </div>
+        <div className='separator'></div>
+        <div className='sell-orders'>
+          <p className='heading'>Past Sell Orders</p>
+          {
+            this.state.sellOrders.map((v, i) => (<p key={i}>{v}</p>))
+          }
+        </div>
       </div>
       </div>
       <hr />
@@ -107,6 +138,7 @@ class Sell extends React.Component {
       <p>The price for the clothes in 'other' type cannot be determined before quality check</p>
       <p>The actual total amount and the estimated amount may vary as need to make sure the clothes meet our minimum quality standards</p>
       </div>
+      <button onClick={this.checkauth}>click</button>
       </div>
     );
   }

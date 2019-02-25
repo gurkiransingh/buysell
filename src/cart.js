@@ -7,6 +7,7 @@ class Cart extends React.Component {
         super(props);
 
         this.fetchUpdated = this.fetchUpdated.bind(this);
+        this.payTM = this.payTM.bind(this);
 
         this.state = {
             cartItems: this.props.cartItems
@@ -36,6 +37,17 @@ class Cart extends React.Component {
             })
     }
 
+    payTM() {
+        let self = this;
+        Axios.post('/makePayloadForPaytm', { custId: this.props.userId})
+            .then(function(res) {
+                self.props.history.push({
+                    pathname: `/user/${self.props.userId}/pgredirect`,
+                    state: { data: res.data}
+                })
+            })
+    }
+
     render() {
         return (
             <div className='cart-container'>
@@ -54,6 +66,8 @@ class Cart extends React.Component {
                     <p>Rs 5000</p>
                  </div>
                </div>
+
+               <button onClick={this.payTM}>Place Order</button>
             </div>
         )
     }

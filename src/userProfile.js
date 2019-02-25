@@ -10,6 +10,7 @@ import Cart from './cart';
 import UpdateInfo from './update-info';
 import Orders from './orders';
 import ReturnExchange from './returnExcahnge';
+import Redirect from './redirect';
 import Axios from 'axios';
 
 
@@ -56,7 +57,7 @@ class UserProfile extends React.Component {
 
     getCartItems() {
         let self = this;
-        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
+        Axios.post('/getCartItems', {custId: this.props.userId})
         .then(function(res) {
             self.setState({
                 id: res.data.length,
@@ -67,7 +68,7 @@ class UserProfile extends React.Component {
 
     getuserData(fromUpdate) {
         let self = this;
-        Axios.post('http://localhost:5000/getUserDetails', {userId: this.props.match.params.id})
+        Axios.post('/getUserDetails', {userId: this.props.match.params.id})
         .then(function(res) {
             let personal = {
                 firstName: res.data.firstname,
@@ -106,7 +107,9 @@ class UserProfile extends React.Component {
                 />
                 <Route
                     path={`${this.props.match.path}/sell`}
-                    component={Sell}
+                    component={props => (
+                        <Sell {...props}  userId={this.props.userId} />
+                        )}
                 />
                 <Route
                     exact
@@ -125,6 +128,12 @@ class UserProfile extends React.Component {
                     path={`${this.props.match.path}/cart`}
                     component={props => (
                     <Cart {...props} getCartItems={this.getCartItems} cartItems={this.state.cartItems} userId={this.props.userId} />
+                    )}
+                />
+                <Route 
+                    path={`${this.props.match.path}/pgredirect`}
+                    component={props => (
+                        <Redirect {...props} />
                     )}
                 />
                 <Route
