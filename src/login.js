@@ -33,7 +33,7 @@ class Login extends React.Component {
     if (this.state.username !== "" && this.state.password !== "") {
       let self = this;
       axios
-        .post("/login", {
+        .post("http://localhost:5000/login", {
           username: this.state.username,
           password: this.state.password
         })

@@ -4,7 +4,6 @@ import Axios from 'axios';
 class UpdateInfo extends React.Component {
     constructor(props) {
         super(props);
-        console.log('hi');
 
         this.handleAddr1 = this.handleAddr1.bind(this);
         this.handleAddr2 = this.handleAddr2.bind(this);
@@ -102,7 +101,7 @@ class UpdateInfo extends React.Component {
             disablePersonal: true
         })
         let self = this;
-        Axios.post('/changePersonalChanges', {personal: this.state.personal, userId: this.props.match.params.id})
+        Axios.post('http://localhost:5000/changePersonalChanges', {personal: this.state.personal, userId: this.props.match.params.id})
             .then(function(res) {
                 console.log(res);
                 let obj = {
@@ -124,7 +123,7 @@ class UpdateInfo extends React.Component {
         });
 
         let self = this;
-        Axios.post('/changeAddressChanges', {address: this.state.address, userId: this.props.match.params.id})
+        Axios.post('http://localhost:5000/changeAddressChanges', {address: this.state.address, userId: this.props.match.params.id})
             .then(function(res) {
                 console.log(res);
                 let obj = {

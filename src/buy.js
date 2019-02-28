@@ -23,7 +23,7 @@ class Buy extends React.Component {
 
   componentDidMount() {
     let self = this;
-    Axios.get('/getAllItems')
+    Axios.get('http://localhost:5000/getAllItems')
       .then((res) => {
         self.originalItems = res.data;
         self.setState({

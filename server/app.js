@@ -96,10 +96,6 @@ app.get("/logout", function(req, res) {
   res.send("out");
 });
 
-app.get('/haha', function(req, res) {
-  console.log(req);
-})
-
 app.get('/getAllItems', function(req, res) {
   Item.find({}, function(err, items) {
     res.json(items);
@@ -232,45 +228,70 @@ app.post('/getSellOrders', function(req, res) {
 });
 
 app.post('/makePayloadForPaytm', function(req, res) {
-  let fResult;
-  let paramlist = {
-    ORDER_ID: '9',
-    CUST_ID: '2',
-    MOBILE_NO: '9417392969',
-    INDUSTRY_TYPE_ID: 'Retail',
-    CHANNEL_ID: 'WEB',
-    TXN_AMOUNT: '1',
-    MID: 'AvXMpM68578606838453',
-    WEBSITE: 'WEBSTAGING',
-    PAYTM_MERCHANT_KEY: 'g1E6CnTz&1Hhc%dN'
-  }
-  var paramarray = new Array();
-  for (name in paramlist)
-        {
-          if (name == 'PAYTM_MERCHANT_KEY') {
-               var PAYTM_MERCHANT_KEY = paramlist[name] ; 
-            }else
-            {
-            paramarray[name] = paramlist[name] ;
+  let itemIds = [];
+  req.body.items.map((v,i) => {
+    itemIds.push(v._id);
+  });
+      Order.create({
+        price: '500',
+        items: itemIds
+      }, function(err, order) {
+        if(err) { console.log(err);  res.end('oops'); }
+        else {
+          User.findOne({_id: req.body.custId}, function(err, foundUser) {
+            if (err) {console.log(err);}
+            else {
+              foundUser.orders.push(order);
+              foundUser.save(function(err, user) {
+                if (err) {console.log(err);}
+                else {
+                  let paramlist = {
+                    ORDER_ID: String(order._id),
+                    CUST_ID: req.body.custId,
+                    MOBILE_NO: '1234567890',
+                    INDUSTRY_TYPE_ID: 'Retail',
+                    CHANNEL_ID: 'WEB',
+                    TXN_AMOUNT: '500',
+                    MID: 'AvXMpM68578606838453',
+                    WEBSITE: 'WEBSTAGING',
+                    PAYTM_MERCHANT_KEY: 'g1E6CnTz&1Hhc%dN'
+                  }
+                  var paramarray = new Array();
+                  for (name in paramlist) {
+                    if (name == 'PAYTM_MERCHANT_KEY') {
+                          var PAYTM_MERCHANT_KEY = paramlist[name] ; 
+                      } else {
+                      paramarray[name] = paramlist[name] ;
+                      }
+                    }
+                    paramarray['CALLBACK_URL'] = `http://localhost:5000/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}`;
+                    checksum.genchecksum(paramarray, PAYTM_MERCHANT_KEY, function(result){
+                      let obj = { }
+                      for (var key in result) {
+                        obj[key] = result[key]
+                      }
+                      res.json(obj);
+                    })
+                }
+              })
             }
+          })
         }
-        paramarray['CALLBACK_URL'] = 'https://radiant-thicket-90721.herokuapp.com/responseFromPaytm';
-        checksum.genchecksum(paramarray, PAYTM_MERCHANT_KEY, function(result){
-          let obj = { }
-          for (var key in result) {
-            obj[key] = result[key]
-          }
-          res.json(obj);
-        })
-})
+      })
+    });
 
-app.post('/responseFromPaytm',function(req, res) {
+
+app.post('/responseFromPaytm/',function(req, res) {
+  console.log('jasbdkjabskda', req);
   console.log('in response api');
   var paramlist = req.body;
   console.log(paramlist);
   if(checksum.verifychecksum(paramlist, 'g1E6CnTz&1Hhc%dN'))
   {
     console.log("true");
+    if(req.body.RESPMSG.includes('suc')) {
+      User
+    }
     res.render('success.ejs',{ 'restdata' : "true" ,'paramlist' : paramlist});
   }else
   {
@@ -289,4 +310,4 @@ app.get("*", (req, res) => {
 });
 
 
-app.listen(port, () => console.log(`Example app listening on port 5000!`));
+app.listen(5000, () => console.log(`Example app listening on port 5000!`));

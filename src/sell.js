@@ -45,7 +45,7 @@ class Sell extends React.Component {
     let map = this.state.clothingTypes.filter((v, i) => {
       return delete v.price
     })
-    Axios.post('/createSellOrder', {userId: this.props.userId , data: map, thought: this.state.totalSum})
+    Axios.post('http://localhost:5000/createSellOrder', {userId: this.props.userId , data: map, thought: this.state.totalSum})
       .then(function(res) {
         console.log(res.data);
       })
@@ -55,7 +55,7 @@ class Sell extends React.Component {
   componentDidMount() {
     let self = this;
     this.submit.current.style.display = 'none';
-    Axios.post('/getSellOrders', {userId: this.props.userId})
+    Axios.post('http://localhost:5000/getSellOrders', {userId: this.props.userId})
       .then(function(res) {
         self.setState({
           sellOrders: res.data

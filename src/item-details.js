@@ -12,7 +12,7 @@ class ItemDetails extends React.Component {
     addToCart() {
         let self = this;
         console.log(this.props.location.state.id, this.props.userId);
-        Axios.post('/pushtocart', {
+        Axios.post('http://localhost:5000/pushtocart', {
             itemId: self.props.location.state.id,
             custId: self.props.userId
         })
