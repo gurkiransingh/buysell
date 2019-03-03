@@ -9,7 +9,7 @@ class HomePage extends React.Component {
         </div>
         <div className='inspiration'>
         <div>
-          throw some sustainable inspiration here (aspect ratio - 25% )
+           some sustainable inspiration here (aspect ratio - 25% )
         </div>
         </div>
         <div className='what-is-it'>

@@ -1,5 +1,4 @@
 let mongoose = require("mongoose"),
-  properties = require('./order');
   passportLocalMongoose = require("passport-local-mongoose");
 
 let UserSchema = new mongoose.Schema({

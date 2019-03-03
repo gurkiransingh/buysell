@@ -98,7 +98,9 @@ class Buy extends React.Component {
           </div>
           <div className='items-container'>
           {
-            this.state.items.map((v,i) => {
+            this.state.items
+              .filter((v,i) => v.archived === false)
+              .map((v,i) => {
                 return (
                   <Item item={v} key={i} history={this.props}/>
                 )

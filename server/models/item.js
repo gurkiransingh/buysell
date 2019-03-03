@@ -1,5 +1,4 @@
-let mongoose = require("mongoose"),
-  passportLocalMongoose = require("passport-local-mongoose");
+let mongoose = require("mongoose");
 
 let ItemSchema = new mongoose.Schema({
     type: String,
@@ -8,6 +7,10 @@ let ItemSchema = new mongoose.Schema({
     pic: String,
     size: [String],
     price: Number,
+    archived: {
+      type: Boolean,
+      default: false
+    }
 })
 
 module.exports = mongoose.model('Item', ItemSchema);

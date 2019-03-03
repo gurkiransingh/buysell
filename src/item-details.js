@@ -4,21 +4,17 @@ import Axios from 'axios';
 class ItemDetails extends React.Component {
     constructor(props) {
         super(props);
-
         this.addToCart = this.addToCart.bind(this);
-        console.log(this.props);
     }
 
     addToCart() {
-        let self = this;
-        console.log(this.props.location.state.id, this.props.userId);
         Axios.post('http://localhost:5000/pushtocart', {
-            itemId: self.props.location.state.id,
-            custId: self.props.userId
+            itemId: this.props.location.state.id,
+            custId: this.props.userId
         })
-        .then(function(res) {
+        .then((res) => {
             if(res.data) {
-                self.props.addToCart();
+                this.props.addToCart();
             }
         })
     }
@@ -38,9 +34,7 @@ class ItemDetails extends React.Component {
                     <p className='horizontal-separator'></p>
                     <p className='size'>Available in <span>M</span></p>
                     <p className='price'>Rs 1200</p>
-                    <div className='add-to-cart' onClick={this.addToCart}>
-                        <p>Add to Cart</p>
-                    </div>
+                    <div className='add-to-cart' onClick={this.addToCart}><p>Add to Cart</p></div>
                     <p className='horizontal-separator'></p>
                     <div className='details'>
                         <p>Product Details</p>

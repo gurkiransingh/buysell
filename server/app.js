@@ -25,7 +25,7 @@ app.set('view engine', 'ejs');
 // var certificate = fs.readFileSync(path.join(__dirname + "/../https/cert.pem"));
 
 mongoose.connect(
-  "mongodb://gurkiran:Eldorado1@ds223015.mlab.com:23015/playground"
+  "mongodb://gurkiran:Eldorado1@ds155845.mlab.com:55845/playground"
 );
 
 app.use(bodyParser.json());
@@ -61,6 +61,19 @@ passport.deserializeUser(User.deserializeUser());
 
 let port = process.env.PORT || 5001;
 // eslint-disable-next-line no-unused-vars
+
+// Item.create({
+//   type: 'Denim',
+//   name: 'Hipster 2',
+//   desc: 'A description',
+//   pic: 'https://picsum.photos/201/302',
+//   size: ['M'],
+//   price: 800,
+//   archived: false
+
+// }, function(err, item) {
+//   console.log(item);
+// })
 
 app.post("/register", function(req, res) {
   User.register(
@@ -227,6 +240,15 @@ app.post('/getSellOrders', function(req, res) {
   })
 });
 
+app.post('/getOrders', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    if (err) { console.log(err); }
+    else {
+      res.json(foundUser.orders);
+    }
+  })
+})
+
 app.post('/makePayloadForPaytm', function(req, res) {
   let itemIds = [];
   req.body.items.map((v,i) => {
@@ -264,7 +286,7 @@ app.post('/makePayloadForPaytm', function(req, res) {
                       paramarray[name] = paramlist[name] ;
                       }
                     }
-                    paramarray['CALLBACK_URL'] = `http://localhost:5000/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}`;
+                    paramarray['CALLBACK_URL'] = `http://localhost:5000/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}&fromCart=${req.body.fromCart}&items=${itemIds}`;
                     checksum.genchecksum(paramarray, PAYTM_MERCHANT_KEY, function(result){
                       let obj = { }
                       for (var key in result) {
@@ -282,19 +304,54 @@ app.post('/makePayloadForPaytm', function(req, res) {
 
 
 app.post('/responseFromPaytm/',function(req, res) {
-  console.log('jasbdkjabskda', req);
+  // console.log('jasbdkjabskda', req, req.query);
+  let custId = req.query.custId,
+      orderId = req.query.orderId,
+      fromCart = req.query.fromCart,
+      items = req.query.items;
+
+  items = items.split(',');
+
+// console.log(req.body.RESPMSG.includes('suc'));
   console.log('in response api');
   var paramlist = req.body;
-  console.log(paramlist);
-  if(checksum.verifychecksum(paramlist, 'g1E6CnTz&1Hhc%dN'))
-  {
-    console.log("true");
-    if(req.body.RESPMSG.includes('suc')) {
-      User
+  // console.log(paramlist);
+  if(checksum.verifychecksum(paramlist, 'g1E6CnTz&1Hhc%dN')) {
+    if(req.body.RESPMSG.includes('ccess')) {
+      if (fromCart = 'true') { // check if its from cart 
+        User.findOne({_id: custId}, function(err, foundUser) { 
+          if (err) {console.log(err);}
+          else {
+            foundUser.cart_items = []; // delete all cart items from that user
+            foundUser.save(function(err, user) {
+              if(err) {console.log(err);}
+            })
+          }
+        })
+      }
+      items.map(function(id, index) { // Mark those items as archived ( bought )
+        Item.findOne({_id: id}, function(err, foundItem) {
+          foundItem.archived = true;
+          foundItem.save(function(err, item) {
+            if(err) {console.log(err);}
+            else {
+              if(index === items.length-1)
+              console.log(index, items.length-1);
+               return res.render('success.ejs',{ 'restdata' : "true" ,'paramlist' : paramlist});
+            }
+          })
+        })
+      })
+    } else {
+      Order.findByIdAndDelete({_id: orderId}, function(err) { // delete the order created as the transaction failed 
+        if (err) {console.log('Order not deleted , oops! ')}
+      })
+      User.findOne({_id: custId}, function(err, foundUser) { // delete the order from user's profile 
+        foundUser.orders.pop();
+      })
+      // no need to check if its from cart or not 
     }
-    res.render('success.ejs',{ 'restdata' : "true" ,'paramlist' : paramlist});
-  }else
-  {
+  }else {
      console.log("false");
      res.render('failure.ejs',{ 'restdata' : "false" , 'paramlist' : paramlist});
   };

@@ -20,10 +20,15 @@ class SubHeader extends React.Component {
       <div className="sub-header">
       <div className='left-links'>
       <div>
-            <NavLink to={`/user/${this.props.match.params.id}/feedback`} activeClassName='selected'>Feedback</NavLink>
+            <NavLink 
+            to={`/user/${this.props.match.params.id}/feedback`} 
+            activeClassName='selected'>FAQs</NavLink>
         </div>
         <div>
-            <NavLink to={`/user/${this.props.match.params.id}/orders`}>Past orders</NavLink>
+            <NavLink 
+              to={`/user/${this.props.match.params.id}/orders`}
+              activeClassName='selected'
+              >Past orders</NavLink>
         </div>
       </div>
         <div className='links'>
@@ -44,10 +49,16 @@ class SubHeader extends React.Component {
         </div>
         <div className='right-links'>
         <div>
-            <NavLink to={`/user/${this.props.match.params.id}/returnExcahnge`}>Return/Exchange</NavLink>
+            <NavLink 
+              to={`/user/${this.props.match.params.id}/returnExcahnge`}
+              activeClassName='selected'
+              >Return/Exchange</NavLink>
         </div>
         <div>
-            <NavLink to={`/user/${this.props.match.params.id}/updateInfo`}>Update info</NavLink>
+            <NavLink 
+              to={`/user/${this.props.match.params.id}/updateInfo`}
+              activeClassName='selected'
+              >Update info</NavLink>
         </div>
         </div>
         <div className='cart' onClick={this.goToCart}>

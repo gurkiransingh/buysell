@@ -21,16 +21,13 @@ class Header extends React.Component {
           </div>
           <div className="links">
             <div className="user-menu">
-              {this.props.isLogged && (
                 <div>
+                {this.props.isLogged && (
                   <NavLink 
                     to={`/user/${this.props.userId}`}
                     activeClassName='selected'
                     >My Profile</NavLink>
-                </div>
               )}
-              {!this.props.isLogged && (
-                <div>
                   <NavLink 
                     to="/process"
                     activeClassName="selected"
@@ -50,7 +47,6 @@ class Header extends React.Component {
                     Ask
                   </NavLink>
                 </div>
-              )}
             </div>
           </div>
           <div className="on-off-links">

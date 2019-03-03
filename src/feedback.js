@@ -1,26 +1,48 @@
-import React from 'react';
+import React from "react";
+import qas from "./qas";
+import List from "./list";
 
 class Feedback extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+constructor(props) {
+    super(props);
+    this.state = {
+        currentIndex: -1
+        };
 
-    render() {
-        return (
-            <div className='feedback-container'>
-                <div className='feedback'>
-                    <p className='title'>Help us improve !</p>
-                    <div className='persuation'>
-                        E nondimeno fragilita come giudice in il. Priegano non tanto nome procuratore come impermutabile sue, fallo essaudisce manifestamente mentre che come. Noi noi prieghi novellare uomini i a ripararci. Ammirabile in se priegano in nostra ancora incominciare verso suo. Potremmo discenda quegli la piú, viviamo come una da cosa cominciamento..
-                    </div>
-                    <div className='form'>
-                        <textarea placeholder='Please type in here ...'></textarea>
-                        <button><span>Submit</span></button>
-                    </div>
-                </div>
+    this.handleChange = this.handleChange.bind(this);
+}    
+
+  handleChange(i) {
+    this.setState({
+      currentIndex: i
+    });
+  };
+
+  render() {
+    const { currentIndex } = this.state;
+
+    return (
+        <div className='feedback-container'> 
+            <div className='title'>
+                <p className='title-deco'></p>
+                <span>Frequently Asked Questions</span>
+                <p className='title-deco'></p>
             </div>
-        )
-    }
+          <div className="accordion">
+            {qas.map((e, i) => (
+            <List
+                question={e.question}
+                answer={e.answer}
+                handleChange={this.handleChange.bind(this, i)}
+                key={i}
+                index={i}
+                currentIndex={currentIndex}
+            />
+            ))}
+         </div>
+        </div>
+    );
+  }
 }
 
 export default Feedback;

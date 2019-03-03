@@ -102,7 +102,7 @@ class UserProfile extends React.Component {
                 <Route
                     exact path={`${this.props.match.path}`}
                     component={props => (
-                        <Profile {...props}  pInfo={this.state.personal} />
+                        <Profile {...props}  pInfo={this.state.personal} userId={this.props.userId} />
                         )}
                 />
                 <Route

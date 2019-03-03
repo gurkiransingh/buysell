@@ -10,39 +10,44 @@ class Cart extends React.Component {
         this.payTM = this.payTM.bind(this);
 
         this.state = {
-            cartItems: this.props.cartItems
+            cartItems: this.props.cartItems,
+            totalPrice: 0
         }
     }
 
     componentDidMount() {
-        let self = this;
+        let totalPrice = 0;
         Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
-        .then(function(res) {
-            self.setState({
+        .then((res) => {
+            this.setState({
                 cartItems: res.data
+            }, () => {
+                this.state.cartItems.map((item, index) => {
+                    totalPrice += Number(item.price);
+                })
+                this.setState({
+                    totalPrice: totalPrice
+                })
             })
         });
         
     }
 
     fetchUpdated(item) {
-        console.log(item);
-        let self = this;
         Axios.post('http://localhost:5000/deleteItemFromCart', {custId: this.props.userId, itemId: item._id})
-            .then(function(res) {
+            .then((res) => {
                 console.log(res);
                 if(res.data === true) {
-                    self.props.getCartItems();
+                    this.props.getCartItems();
                 }
             })
     }
 
     payTM() {
-        let self = this;
-        Axios.post('http://localhost:5000/makePayloadForPaytm', { custId: this.props.userId, items: this.props.cartItems})
-            .then(function(res) {
-                self.props.history.push({
-                    pathname: `/user/${self.props.userId}/pgredirect`,
+        Axios.post('http://localhost:5000/makePayloadForPaytm', { custId: this.props.userId, items: this.props.cartItems, fromCart: true})
+            .then((res) => {
+                this.props.history.push({
+                    pathname: `/user/${this.props.userId}/pgredirect`,
                     state: { data: res.data}
                 })
             })
@@ -60,10 +65,11 @@ class Cart extends React.Component {
                     })
                  } 
                 </div>
+                <hr />
                 <div className="total-price">
                  <div className='container'>
                      <p>Total Price</p>
-                    <p>Rs 5000</p>
+                    <p>Rs {this.state.totalPrice}</p>
                  </div>
                </div>
 

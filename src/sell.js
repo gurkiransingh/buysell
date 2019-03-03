@@ -24,7 +24,6 @@ class Sell extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputFocus = this.handleInputFocus.bind(this);
     this.placeSellOrder = this.placeSellOrder.bind(this);
-    this.checkauth = this.checkauth.bind(this);
 
   }
 
@@ -138,7 +137,6 @@ class Sell extends React.Component {
       <p>The price for the clothes in 'other' type cannot be determined before quality check</p>
       <p>The actual total amount and the estimated amount may vary as need to make sure the clothes meet our minimum quality standards</p>
       </div>
-      <button onClick={this.checkauth}>click</button>
       </div>
     );
   }
