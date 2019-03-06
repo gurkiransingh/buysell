@@ -1,18 +1,29 @@
 import React from 'react';
 import Axios from 'axios';
+import Image from './zoomable';
 
 class ItemDetails extends React.Component {
     constructor(props) {
         super(props);
         this.addToCart = this.addToCart.bind(this);
+
+        this.state = {
+            loader: false
+        }
     }
 
     addToCart() {
-        Axios.post('http://localhost:5000/pushtocart', {
+        this.setState({
+            loader: true
+        })
+        Axios.post('/pushtocart', {
             itemId: this.props.location.state.id,
             custId: this.props.userId
         })
         .then((res) => {
+            this.setState({
+                loader: false
+            })
             if(res.data) {
                 this.props.addToCart();
             }
@@ -21,12 +32,14 @@ class ItemDetails extends React.Component {
 
     render() {
         return (
-            <div className='item-details'>
+            <div className={'item-details ' + (this.state.loader ? 'fade' : '')}>
+            {
+                this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+            }
                 <div className='pics'>
-                    <img src='https://picsum.photos/251/301' alt='' />
-                    <img src='https://picsum.photos/251/301' alt='' />
-                    <img src='https://picsum.photos/251/301' alt='' />
-                    <img src='https://picsum.photos/251/301' alt='' />
+                <div>
+                    <Image />
+                </div>
                 </div>
                 <div className='details'>
                     <p className='title'>Name</p>

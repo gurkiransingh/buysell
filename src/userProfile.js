@@ -9,7 +9,7 @@ import SubHeader from './sub-header';
 import Cart from './cart';
 import UpdateInfo from './update-info';
 import Orders from './orders';
-import ReturnExchange from './returnExcahnge';
+import ReturnExchange from './returnExchange';
 import Redirect from './redirect';
 import Axios from 'axios';
 
@@ -46,6 +46,7 @@ class UserProfile extends React.Component {
     }
 
     componentDidMount() {
+        document.getElementById('header').style.position = 'relative';
         let self = this;
         if (!this.props.isLogged && !this.props.userId) {
             this.props.history.push('/login');
@@ -54,10 +55,14 @@ class UserProfile extends React.Component {
         this.getuserData();
     }
 
+    componentWillUnmount() {
+        document.getElementById('header').style.position = 'sticky';
+    }
+
 
     getCartItems() {
         let self = this;
-        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
+        Axios.post('/getCartItems', {custId: this.props.userId})
         .then(function(res) {
             self.setState({
                 id: res.data.length,
@@ -68,7 +73,7 @@ class UserProfile extends React.Component {
 
     getuserData(fromUpdate) {
         let self = this;
-        Axios.post('http://localhost:5000/getUserDetails', {userId: this.props.match.params.id})
+        Axios.post('/getUserDetails', {userId: this.props.match.params.id})
         .then(function(res) {
             let personal = {
                 firstName: res.data.firstname,
@@ -81,7 +86,8 @@ class UserProfile extends React.Component {
                 addr2: res.data.addr2,
                 city: res.data.city,
                 zip: res.data.pinCode,
-                state: res.data.state
+                state: res.data.state,
+                landmark: res.data.landmark
             }
             self.setState({
                 personal: personal,

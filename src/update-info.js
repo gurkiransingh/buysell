@@ -1,5 +1,6 @@
 import React from 'react';
 import Axios from 'axios';
+import ReactTooltip from 'react-tooltip';
 
 class UpdateInfo extends React.Component {
     constructor(props) {
@@ -16,20 +17,38 @@ class UpdateInfo extends React.Component {
         this.handleZip = this.handleZip.bind(this);
         this.enablePersonal = this.enablePersonal.bind(this);
         this.enableAddress = this.enableAddress.bind(this);
-
+        this.landmark = this.landmark.bind(this);
         this.handlePersonalChanges = this.handlePersonalChanges.bind(this);
         this.handleAddressChanges = this.handleAddressChanges.bind(this);
+        this.toggleForm = this.toggleForm.bind(this);
 
         this.state = {
             personal : this.props.pInfo,
             address: this.props.aInfo,
             disablePersonal: true,
-            disableAddress: true
+            loader: false,
+            showAdd: false,
+            addresses: [
+                {
+                    address: 'Gurkiran Singh Randhawa, Gali behari da depot chander nagar batala 143505',
+                    default: true
+                },
+                {
+                    address: 'Gurkiran Singh Randhawa, Gali behari da depot chander nagar batala 143505',
+                    default: false
+                }
+            ]
         }
     }
 
     componentDidMount() {
-        console.log(this.state.disablePersonal);
+    }
+
+    toggleForm() {
+        let state = this.state.showAdd;
+        this.setState({
+            showAdd: !state
+        })
     }
 
     handleAddr1(e) {
@@ -74,6 +93,13 @@ class UpdateInfo extends React.Component {
             personal: obj
         })
     }
+    landmark(e) {
+        var obj = Object.assign({}, this.state.address);
+        obj.landmark = e.target.value;
+        this.setState({
+            adderss: obj
+        })
+    }
     handlePhone(e) {
         var obj = Object.assign({}, this.state.personal);
         obj.number = e.target.value;
@@ -98,34 +124,38 @@ class UpdateInfo extends React.Component {
 
     handlePersonalChanges() {
         this.setState({
-            disablePersonal: true
+            disablePersonal: true,
+            loader: true
         })
-        let self = this;
-        Axios.post('http://localhost:5000/changePersonalChanges', {personal: this.state.personal, userId: this.props.match.params.id})
-            .then(function(res) {
-                console.log(res);
+        Axios.post('/changePersonalChanges', {personal: this.state.personal, userId: this.props.match.params.id})
+            .then((res) => {
+                this.setState({
+                    loader: false
+                })
                 let obj = {
                     firstName: res.data.firstname,
                     lastName: res.data.lastname,
                     email: res.data.email,
                     number: res.data.phone
                 }
-                self.setState({ 
+                this.setState({ 
                     personal: obj
                 })
-                self.props.getUserInfo(true);
+                this.props.getUserInfo(true);
             })
     }
 
     handleAddressChanges() {
         this.setState({
-            disableAddress: true
+            disableAddress: true,
+            loader: true
         });
 
-        let self = this;
-        Axios.post('http://localhost:5000/changeAddressChanges', {address: this.state.address, userId: this.props.match.params.id})
-            .then(function(res) {
-                console.log(res);
+        Axios.post('/changeAddressChanges', {address: this.state.address, userId: this.props.match.params.id})
+            .then((res) => {
+                this.setState({
+                    loader: false
+                })
                 let obj = {
                     addr1: res.data.addr1,
                     addr2: res.data.addr2,
@@ -133,10 +163,10 @@ class UpdateInfo extends React.Component {
                     state: res.data.state,
                     zip: res.data.zip
                 }
-                self.setState({
+                this.setState({
                     adderss: obj
                 })
-                self.props.getUserInfo(true);
+                this.props.getUserInfo(true);
             })
     }
 
@@ -154,7 +184,10 @@ class UpdateInfo extends React.Component {
 
     render() {
         return (
-            <div className='update-info-container'>
+            <div className={'update-info-container' + (this.state.loader ? 'fade' : '')}>
+            {
+                this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+            }
                 <h2 className='main-header'>Update your info</h2>
                 <div className='container'>
                     <div>
@@ -177,45 +210,72 @@ class UpdateInfo extends React.Component {
                                 <label htmlFor='number'>Phone Number</label>
                                 <input type='text' onChange={this.handlePhone} value={this.state.personal.number}  disabled={this.state.disablePersonal}/>
                             </div>
-                        </div>
-                        {
+                            {
                             this.state.disablePersonal ? 
-                                (<button onClick={this.enablePersonal}>Edit</button>) :
-                                 (<button onClick={this.handlePersonalChanges}>Save Changes</button>)
-                        }
+                                (<button className='edit' onClick={this.enablePersonal}>Edit</button>) :
+                                 (<button className='save' onClick={this.handlePersonalChanges}>Save Changes</button>)
+                            }
+
+                        </div>
                     </div>
-                    <div className='separator'></div>
                     <div>
                         <div className='header'>
-                        <i className="fas fa-location-arrow"></i><span>Mailing Address</span>
+                        <i className="fa fa-address-card" aria-hidden="true"></i><span>Mailing Address</span>
                         </div>
                         <div className='address'>
-                            <div className='pair'>
-                                <label htmlFor='address1'>Address 1</label>
-                                <input type='text' onChange={this.handleAddr1} value={this.state.address.addr1 || ''} disabled={this.state.disableAddress}/>
-                            </div>
-                            <div className='pair'>
-                                <label htmlFor='address2'>Address 2</label>
-                                <input type='text' onChange={this.handleAddr2} value={this.state.address.addr2 || ''} disabled={this.state.disableAddress}/>
-                            </div>
-                            <div className='pair'>
-                                <label htmlFor='city'>City</label>
-                                <input type='text' onChange={this.handleCity} value={this.state.address.city || ''} disabled={this.state.disableAddress}/>
-                            </div>
-                            <div className='pair'>
-                                <label htmlFor='state'>State</label>
-                                <input type='text' onChange={this.handleState} value={this.state.address.state || ''} disabled={this.state.disableAddress}/>
-                            </div>
-                            <div className='pair'>
-                                <label htmlFor='zip'>ZIP/Postal Code</label>
-                                <input type='text' onChange={this.handleZip} value={this.state.address.zip || ''} disabled={this.state.disableAddress}/>
+                            <div className='container'> 
+                                <div data-tip data-for='addAddress' className='add-address' onClick={this.toggleForm}><i class="fa fa-plus-circle" aria-hidden="true"></i>
+                                <ReactTooltip id='addAddress' type='info' effect='float'>
+                                  <span>Add another address</span>
+                                </ReactTooltip>
+                                </div>
+                            { this.state.showAdd &&
+                            (<div className='form'>
+                                <div className='pair'>
+                                    <label htmlFor='address1'>Address 1</label>
+                                    <input type='text' onChange={this.handleAddr1} value={this.state.address.addr1 || ''} disabled={this.state.disableAddress}/>
+                                </div>
+                                <div className='pair'>
+                                    <label htmlFor='address2'>Address 2</label>
+                                    <input type='text' onChange={this.handleAddr2} value={this.state.address.addr2 || ''} disabled={this.state.disableAddress}/>
+                                </div>
+                                <div className='pair'>
+                                    <label htmlFor='landmark'>Lankmark</label>
+                                    <input type='text' onChange={this.landmark} value={this.state.address.landmark || ''} disabled={this.state.disableAddress}/>
+                                </div>
+                                <div className='pair'>
+                                    <label htmlFor='city'>City</label>
+                                    <input type='text' onChange={this.handleCity} value={this.state.address.city || ''} disabled={this.state.disableAddress}/>
+                                </div>
+                                <div className='pair'>
+                                    <label htmlFor='state'>State</label>
+                                    <input type='text' onChange={this.handleState} value={this.state.address.state || ''} disabled={this.state.disableAddress}/>
+                                </div>
+                                <div className='pair'>
+                                    <label htmlFor='zip'>ZIP/Postal Code</label>
+                                    <input type='text' onChange={this.handleZip} value={this.state.address.zip || ''} disabled={this.state.disableAddress}/>
+                                </div>
+                                <button className='save' onClick={this.handleAddressChanges}>Add</button>
+                             </div>)
+                            }
+                            {
+                                this.state.addresses.map((v,i) => {
+                                    return (
+                                        <div className='addresses' key={i}>
+                                            <div className='value'>
+                                              <span>{i+1}</span><span>{v.address}</span>
+                                            </div>
+                                            <div className='def'>
+                                            {
+                                                v.default ? (<span>Default</span>) : ( <span>Make Default</span>)
+                                            }
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            }
                             </div>
                         </div>
-                        {
-                            this.state.disableAddress ? 
-                                (<button onClick={this.enableAddress}>Edit</button>) :
-                                 (<button onClick={this.handleAddressChanges}>Save Changes</button>)
-                        }
                     </div>
                 </div>
             </div>

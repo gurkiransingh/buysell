@@ -17,7 +17,7 @@ class Cart extends React.Component {
 
     componentDidMount() {
         let totalPrice = 0;
-        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
+        Axios.post('/getCartItems', {custId: this.props.userId})
         .then((res) => {
             this.setState({
                 cartItems: res.data
@@ -34,7 +34,7 @@ class Cart extends React.Component {
     }
 
     fetchUpdated(item) {
-        Axios.post('http://localhost:5000/deleteItemFromCart', {custId: this.props.userId, itemId: item._id})
+        Axios.post('/deleteItemFromCart', {custId: this.props.userId, itemId: item._id})
             .then((res) => {
                 console.log(res);
                 if(res.data === true) {
@@ -44,7 +44,7 @@ class Cart extends React.Component {
     }
 
     payTM() {
-        Axios.post('http://localhost:5000/makePayloadForPaytm', { custId: this.props.userId, items: this.props.cartItems, fromCart: true})
+        Axios.post('/makePayloadForPaytm', { custId: this.props.userId, items: this.props.cartItems, fromCart: true})
             .then((res) => {
                 this.props.history.push({
                     pathname: `/user/${this.props.userId}/pgredirect`,

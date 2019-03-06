@@ -7,19 +7,23 @@ class Orders extends React.Component {
 
         this.state = {
             orders: [],
-            selectedOrder: ''
+            selectedOrder: '',
+            loader: false
         }
 
         this.handleOrderClick = this.handleOrderClick.bind(this);
     }
 
     componentDidMount() {
-        Axios.post('http://localhost:5000/getOrders', { userId: this.props.userId})
+        this.setState({
+            loader: true
+        })
+        Axios.post('/getOrders', { userId: this.props.userId})
             .then((res) => {
-                console.log(res);
                 this.setState({
                     orders: res.data,
-                    selectedOrder: res.data[0]
+                    selectedOrder: res.data[0],
+                    loader: false
                 })
             })
     }
@@ -32,7 +36,10 @@ class Orders extends React.Component {
 
     render() {
         return (
-            <div className='orders-container'>
+            <div className={'orders-container ' + (this.state.loader ? 'fade' : '')}>
+            {
+                this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+            }
                 <div className='order'>
                     {
                         this.state.orders.map((order, index) => {

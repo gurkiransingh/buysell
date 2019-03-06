@@ -11,26 +11,34 @@ class Profile extends React.Component {
       email: '',
       number: '',
       orders: 0,
-      username: ''
+      username: '',
+      loader: false
     }
   }
 
   componentDidMount() {
-    Axios.post('http://localhost:5000/getUserDetails', { userId: this.props.userId})
+    this.setState({
+      loader: true
+    })
+    Axios.post('/getUserDetails', { userId: this.props.userId})
       .then((res) => {
         this.setState({
           firstName: res.data.firstname,
           lastName: res.data.lastname,
           email: res.data.email,
           orders: res.data.orders.length,
-          username: res.data.username
+          username: res.data.username,
+          loader: false
         })
       })
   }
 
   render() {
     return (
-      <div className="profile-container">
+      <div className={"profile-container " + (this.state.loader ? 'fade': '')}>
+       {
+        this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+      }
         <div className='welcome'>
             <p>Welcome {this.state.username}</p>
         </div>

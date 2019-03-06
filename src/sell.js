@@ -17,7 +17,8 @@ class Sell extends React.Component {
         {'clothType' :'Shorts', 'price':  50, 'quantity': 0}
       ],
       totalSum: 0,
-      sellOrders: []
+      sellOrders: [],
+      loader: false
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -40,12 +41,17 @@ class Sell extends React.Component {
   }
 
   placeSellOrder() {
-    let self = this;
+    this.setState({
+      loader: true
+    })
     let map = this.state.clothingTypes.filter((v, i) => {
       return delete v.price
     })
-    Axios.post('http://localhost:5000/createSellOrder', {userId: this.props.userId , data: map, thought: this.state.totalSum})
-      .then(function(res) {
+    Axios.post('/createSellOrder', {userId: this.props.userId , data: map, thought: this.state.totalSum})
+      .then((res) => {
+        this.setState({
+          loader: false
+        })
         console.log(res.data);
       })
   }
@@ -54,7 +60,7 @@ class Sell extends React.Component {
   componentDidMount() {
     let self = this;
     this.submit.current.style.display = 'none';
-    Axios.post('http://localhost:5000/getSellOrders', {userId: this.props.userId})
+    Axios.post('/getSellOrders', {userId: this.props.userId})
       .then(function(res) {
         self.setState({
           sellOrders: res.data
@@ -78,7 +84,10 @@ class Sell extends React.Component {
 
   render() {
     return (
-      <div className='sell-container'>
+      <div className={'sell-container ' + (this.state.loader ? 'fade' : '')}>
+      {
+        this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+      }
          <div className="sell-flow">
       <div className='sell-flow-container'>
         <div className='header'>

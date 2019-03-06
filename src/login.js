@@ -12,7 +12,8 @@ class Login extends React.Component {
 
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      loader: false
     };
   }
 
@@ -31,25 +32,38 @@ class Login extends React.Component {
   logIn(event) {
     event.preventDefault();
     if (this.state.username !== "" && this.state.password !== "") {
-      let self = this;
+      this.setState({
+        loader: true
+      })
       axios
-        .post("http://localhost:5000/login", {
+        .post("/login", {
           username: this.state.username,
           password: this.state.password
         })
-        .then(function(response) {
+        .then((response) => {
+          this.setState({
+            loader: false
+          })
           let userInfo = response.data[0];
           sessionStorage.setItem("userId", userInfo._id);
-          self.props.status(true, userInfo._id);
-          self.props.history.push(`/user/${userInfo._id}`);
+          this.props.status(true, userInfo._id);
+          this.props.history.push(`/user/${userInfo._id}`);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          this.setState({
+            loader: false
+          })
+          console.log(error)
+        });
     }
   }
 
   render() {
     return (
-      <div className="login-popup">
+      <div className={'login-popup ' + (this.state.loader ? 'fade' : '')}>
+      {
+        this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+      }
         <div className="login">
           <form>
             <label htmlFor="username">

@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 import React from "react";
 import { NavLink } from "react-router-dom";
+import ReactTooltip from 'react-tooltip'
 
 class Header extends React.Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class Header extends React.Component {
 
   render() {
     return (
-      <header>
+      <header id='header'>
         <nav>
           <div className="logo">
             <NavLink to="/" className="logo">
@@ -44,7 +45,7 @@ class Header extends React.Component {
                     to="/contactUs"
                     activeClassName="selected"
                     >
-                    Ask
+                    Contact
                   </NavLink>
                 </div>
             </div>
@@ -59,10 +60,13 @@ class Header extends React.Component {
                 </div>
               )}
               {this.props.isLogged && (
-                <div className="sign-off">
+                <div data-tip data-for='signoff' className="sign-off">
                   <NavLink to="/logout">
                     <i className="fa fa-sign-out-alt" />
                   </NavLink>
+                  <ReactTooltip id='signoff' type='error' effect='float'>
+                    <span>Sign Out</span>
+                  </ReactTooltip>
                 </div>
               )}
             </div>

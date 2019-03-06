@@ -54,7 +54,11 @@
     "passport-local-mongoose": "^5.0.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "react-image-magnify": "^2.7.4",
     "react-router-dom": "^4.3.1",
+    "react-slick": "^0.23.2",
+    "react-tooltip": "^3.9.2",
+    "slick-carousel": "^1.8.1",
     "uuid": "^3.3.2"
   }
 }

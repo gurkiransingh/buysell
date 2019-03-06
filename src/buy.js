@@ -11,7 +11,8 @@ class Buy extends React.Component {
       clothTypeSelected: 'Featured',
       priceType: ['Select', 'low to high', 'high to low'],
       priceTypeSelected: 'Select',
-      items : []
+      items : [],
+      loader: false
     }
 
     this.handleTypeChange = this.handleTypeChange.bind(this);
@@ -22,11 +23,16 @@ class Buy extends React.Component {
   }
 
   componentDidMount() {
-    let self = this;
-    Axios.get('http://localhost:5000/getAllItems')
+    this.setState({
+      loader: true
+    })
+    Axios.get('/getAllItems')
       .then((res) => {
-        self.originalItems = res.data;
-        self.setState({
+        this.setState({
+          loader: false
+        })
+        this.originalItems = res.data;
+        this.setState({
           items: res.data
         })
       })
@@ -71,7 +77,10 @@ class Buy extends React.Component {
 
   render() {
     return (
-      <div className="buy-flow">
+      <div className={"buy-flow " + (this.state.loader ? 'fade' : '')}>
+        {
+          this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+        }
         <div className='buy-container'>
           <div className='filters'>
             <p className='sort-by'>Sort By:</p>

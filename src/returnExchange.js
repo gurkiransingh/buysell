@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 class ReturnExchange extends React.Component {
     constructor(props) {
         super(props);
@@ -7,9 +8,9 @@ class ReturnExchange extends React.Component {
 
     render() {
         return (
-            <div className='return-container'>
-            Orders
-            </div>
+                <div className="feedback-container">
+                    Return and Exchange
+                </div>
         )
     }
 }

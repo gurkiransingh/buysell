@@ -1,5 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import ReactTooltip from 'react-tooltip'
+
 
 class SubHeader extends React.Component {
   constructor(props) {
@@ -50,7 +52,7 @@ class SubHeader extends React.Component {
         <div className='right-links'>
         <div>
             <NavLink 
-              to={`/user/${this.props.match.params.id}/returnExcahnge`}
+              to={`/user/${this.props.match.params.id}/returnExchange`}
               activeClassName='selected'
               >Return/Exchange</NavLink>
         </div>
@@ -62,7 +64,10 @@ class SubHeader extends React.Component {
         </div>
         </div>
         <div className='cart' onClick={this.goToCart}>
-        <p><i className="fas fa-shopping-cart"></i></p>
+        <p data-tip data-for='cart'><i className="fas fa-shopping-cart"></i></p>
+        <ReactTooltip id='cart' type='info' effect='float'>
+          <span>Open my cart</span>
+        </ReactTooltip>
         <span>{this.props.id}</span>
         </div>
       </div>
