@@ -54,7 +54,7 @@ class SubHeader extends React.Component {
             <NavLink 
               to={`/user/${this.props.match.params.id}/returnExchange`}
               activeClassName='selected'
-              >Return/Exchange</NavLink>
+              >Returns</NavLink>
         </div>
         <div>
             <NavLink 

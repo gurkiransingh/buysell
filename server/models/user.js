@@ -4,17 +4,24 @@ let mongoose = require("mongoose"),
 let UserSchema = new mongoose.Schema({
   username: String,
   password: String,
+  email: String,
+  moneyEarned: Number,
+  no_of_orders: Number,
   firstname: String,
   lastname: String,
-  email: String,
-  addr1: String,
-  addr2: String,
-  city: String,
-  state: String,
-  zip: String,
-  moneyEarned: Number,
   phone: Number,
-  no_of_orders: Number,
+  addresses: [{
+    firstname: String,
+    lastname: String,
+    addr1: String,
+    addr2: String,
+    landmark: String,
+    city: String,
+    state: String,
+    zip: String,
+    phone: Number,
+    default: Boolean
+  }],
   orders : [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order'
@@ -23,7 +30,11 @@ let UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'sellOrder'
   }],
-  cart_items: [{
+  cart_items: [{ 
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Item'
+  }],
+  purchasedItems: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Item'
   }]

@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React from "react";
 import axios from "axios";
+import { toast } from 'react-toastify';
 
 class SignUp extends React.Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class SignUp extends React.Component {
       email: "",
       pinCode: "",
       username: "",
-      password: ""
+      password: "",
+      loader: false
     };
   }
   handleFirstname(event) {
@@ -56,7 +58,9 @@ class SignUp extends React.Component {
   }
 
   signUp(event) {
-    let self = this;
+    this.setState({
+      loader: true
+    })
     event.preventDefault();
     if (this.state.username !== "" && this.state.password !== "") {
       axios
@@ -64,20 +68,28 @@ class SignUp extends React.Component {
           firstname: this.state.firstname,
           lastname: this.state.lastname,
           email: this.state.email,
-          pinCode: this.state.pinCode,
+          zip: this.state.pinCode,
           username: this.state.username,
           password: this.state.password
         })
-        .then(function(response) {
-          // eslint-disable-next-line no-console
-          self.props.history.push("/login");
+        .then((response) => {
+          this.setState({
+            loader: false
+          }, () => toast.success('Registered Successfully ! You can now login', {
+              position: toast.POSITION.BOTTOM_CENTER
+            })
+          )
+          this.props.history.push("/login");
         });
     }
   }
 
   render() {
     return (
-      <div className="signup-popup">
+      <div className={"signup-popup " + (this.state.loader ? 'fade' : '')}>
+      {
+        this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+      }
         <div className="signup">
           <form>
             <div className="basic-info">

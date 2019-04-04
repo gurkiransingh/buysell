@@ -6,6 +6,12 @@ class Profile extends React.Component {
     super(props);
 
     this.state = {
+      addr1: '',
+      addr2: '',
+      landmark: '',
+      city: '',
+      state: '',
+      zip: '',
       firstName : '',
       lastName: '',
       email: '',
@@ -14,13 +20,19 @@ class Profile extends React.Component {
       username: '',
       loader: false
     }
+
+    this.redirectToInfo = this.redirectToInfo.bind(this);
+  }
+
+  redirectToInfo() {
+    this.props.history.push(`${this.props.match.url}/updateInfo`)
   }
 
   componentDidMount() {
     this.setState({
       loader: true
     })
-    Axios.post('/getUserDetails', { userId: this.props.userId})
+    Axios.post('/getDefaultAddress', { userId: this.props.userId})
       .then((res) => {
         this.setState({
           firstName: res.data.firstname,
@@ -28,6 +40,12 @@ class Profile extends React.Component {
           email: res.data.email,
           orders: res.data.orders.length,
           username: res.data.username,
+          addr1: res.data.addresses[0] ? res.data.addresses[0].addr1 : '',
+          addr2: res.data.addresses[0] ? res.data.addresses[0].addr2 : '',
+          landmark: res.data.addresses[0] ? res.data.addresses[0].landmark : '',
+          city: res.data.addresses[0] ? res.data.addresses[0].city : '',
+          state: res.data.addresses[0] ? res.data.addresses[0].state : '',
+          zip: res.data.addresses[0] ? res.data.addresses[0].zip : '',
           loader: false
         })
       })
@@ -45,7 +63,12 @@ class Profile extends React.Component {
         <div className='main-body'>
         <div className='profile'>
           <p><i className="fas fa-signature"></i>{`${this.state.lastName}, ${this.state.firstName}`}</p>
-          <p><i className="fas fa-location-arrow"></i>111 Canal Street, NY , 11022</p>
+          <p><i className="fas fa-location-arrow"></i>
+          {
+            this.state.addr1 !== '' ? (`${this.state.addr1} ,${this.state.addr2} ,${this.state.landmark} ,${this.state.city} ,${this.state.state} ,${this.state.zip}`) : 
+              (<button onClick={this.redirectToInfo}>Enter Mailing Address</button>)
+            }
+          </p>
           <p><i className="fas fa-at"></i>{this.state.email}</p>
           <p><i className="fas fa-phone-volume"></i>9898981234</p>
         </div>

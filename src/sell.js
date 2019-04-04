@@ -1,5 +1,6 @@
 import React from "react";
 import Axios from 'axios';
+import { toast } from 'react-toastify';
 
 class Sell extends React.Component {
   constructor(props) {
@@ -7,6 +8,14 @@ class Sell extends React.Component {
 
     this.finish = React.createRef();
     this.submit = React.createRef();
+
+    this.defaultClothingTypes = [
+      {'clothType' :'Denim', 'price':  100, 'quantity': 0},
+        {'clothType' :'Tops', 'price':  50, 'quantity': 0},
+        {'clothType' :'Ethnic', 'price':  75, 'quantity': 0},
+        {'clothType' :'Western', 'price':  50, 'quantity': 0},
+        {'clothType' :'Shorts', 'price':  50, 'quantity': 0}
+    ]
 
     this.state = {
       clothingTypes: [
@@ -50,21 +59,26 @@ class Sell extends React.Component {
     Axios.post('/createSellOrder', {userId: this.props.userId , data: map, thought: this.state.totalSum})
       .then((res) => {
         this.setState({
-          loader: false
+          loader: false,
+          clothingTypes: this.defaultClothingTypes 
+        }, () => {
+          Array.from(document.getElementsByClassName('sell-inputs')).map((v,i) => v.value = '');
+          toast.info('Sell Order placed successfully', {
+            position: toast.POSITION.BOTTOM_CENTER
+          })
         })
-        console.log(res.data);
       })
   }
 
 
   componentDidMount() {
-    let self = this;
     this.submit.current.style.display = 'none';
     Axios.post('/getSellOrders', {userId: this.props.userId})
-      .then(function(res) {
-        self.setState({
+      .then((res) => {
+        this.setState({
           sellOrders: res.data
         })
+        // console.log(document.getElementsByClassName(''))
       });
   }
 
@@ -101,6 +115,8 @@ class Sell extends React.Component {
             <div key={i} className='header'>
               <p>{v['clothType']}:</p>
               <input 
+                className = 'sell-inputs'
+                ref={el => this.inputTitle = el}
                 type="number" 
                 name="quantity" 
                 min="0" max="25" 

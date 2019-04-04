@@ -1,11 +1,31 @@
 import React from "react";
+import Axios from 'axios';
 
 class Contact extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      email : {
+        sender: '',
+        subject: '',
+        text: '',
+        name: ''
+      }
+    }
+
+    this.sendEmail = this.sendEmail.bind(this);
+  }
+
+  sendEmail() {
+    Axios.post('/contactus', {data: this.state.email})
+      .then((res) => {
+        console.log(res);
+      })
   }
 
   render() {
+    const {email} = this.state
     return (
       <div className="contact-container">
         <div className='container'>
@@ -22,7 +42,7 @@ class Contact extends React.Component {
                 id="name"
                 type="text"
                 placeholder="name"
-                onChange={this.name}
+                onChange={e => this.setState({ email:  {...email, name: e.target.value}})}
                 required
               />
           </div>
@@ -34,7 +54,7 @@ class Contact extends React.Component {
                 id="email"
                 type="text"
                 placeholder="example@domain.com"
-                onChange={this.email}
+                onChange={e => this.setState({ email:  {...email, sender: e.target.value}})}
                 required
               />
           </div>
@@ -45,8 +65,8 @@ class Contact extends React.Component {
               <input
                 id="subject"
                 type="text"
-                placeholder="example@domain.com"
-                onChange={this.email}
+                placeholder="subject goes here ..."
+                onChange={e => this.setState({ email:  {...email, subject: e.target.value}})}
                 required
               />
             </div>
@@ -58,12 +78,12 @@ class Contact extends React.Component {
                 id="message"
                 type="text"
                 placeholder=""
-                onChange={this.message}
+                onChange={e => this.setState({ email:  {...email, text: e.target.value}})}
                 required
               />
            </div>
            <div className='pair'>
-            <button><span>Send Email</span></button>
+            <button onClick={this.sendEmail} ><span>Send Email</span></button>
            </div>
           </div>
         </div>
