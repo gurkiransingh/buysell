@@ -1,6 +1,7 @@
 import React from 'react';
 import Axios from 'axios';
 import Image from './zoomable';
+import { toast } from 'react-toastify';
 
 class ItemDetails extends React.Component {
     constructor(props) {
@@ -26,6 +27,9 @@ class ItemDetails extends React.Component {
             })
             if(res.data) {
                 this.props.addToCart();
+                toast.info('Item added to cart !', {
+                    position: toast.POSITION.BOTTOM_CENTER
+                })
             }
         })
     }

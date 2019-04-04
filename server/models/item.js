@@ -7,6 +7,7 @@ let ItemSchema = new mongoose.Schema({
     pic: String,
     size: [String],
     price: Number,
+    returned: Boolean,
     archived: {
       type: Boolean,
       default: false

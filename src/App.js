@@ -12,6 +12,8 @@ import Contact from "./contact-us";
 import AboutUs from "./about-us";
 import Process from "./process";
 import UserProfile from './userProfile';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -105,6 +107,7 @@ class App extends React.Component {
             isLogged={this.state.isLogged}
           />
           <Footer />
+          <ToastContainer autoClose={6000}/>
         </div>
       </BrowserRouter>
     );

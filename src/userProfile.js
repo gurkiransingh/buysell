@@ -22,13 +22,15 @@ class UserProfile extends React.Component {
             id: 0,
             cartItems: null,
             personal: null,
-            address: null
+            addresses: null,
+            itemsBought: null
         }
 
         this.addToCart = this.addToCart.bind(this);
         this.deleteFromCart = this.deleteFromCart.bind(this);
         this.getCartItems = this.getCartItems.bind(this);
         this.getuserData = this.getuserData.bind(this);
+        this.getOrderItems = this.getOrderItems.bind(this);
 
         this.x = 0;
 
@@ -53,18 +55,27 @@ class UserProfile extends React.Component {
           }
         this.getCartItems();
         this.getuserData();
+        this.getOrderItems();
     }
 
     componentWillUnmount() {
         document.getElementById('header').style.position = 'sticky';
     }
 
+    getOrderItems() {
+        Axios.post('/getPotentialReturnItems', {userId: this.props.match.params.id})
+            .then(res => {
+                this.setState({
+                    itemsBought: res.data
+                })
+            })
+    }
+
 
     getCartItems() {
-        let self = this;
         Axios.post('/getCartItems', {custId: this.props.userId})
-        .then(function(res) {
-            self.setState({
+        .then((res) => {
+            this.setState({
                 id: res.data.length,
                 cartItems: res.data
             })
@@ -81,17 +92,9 @@ class UserProfile extends React.Component {
                 email: res.data.email,
                 number: res.data.phone
             }
-            let address = {
-                addr1: res.data.addr1,
-                addr2: res.data.addr2,
-                city: res.data.city,
-                zip: res.data.pinCode,
-                state: res.data.state,
-                landmark: res.data.landmark
-            }
             self.setState({
                 personal: personal,
-                address: address
+                addresses: res.data.addresses
             });
         })
     }
@@ -149,7 +152,7 @@ class UserProfile extends React.Component {
                 <Route
                     path={`${this.props.match.path}/updateInfo`}
                     component={props => (
-                    <UpdateInfo {...props} pInfo={this.state.personal} aInfo={this.state.address} getUserInfo={this.getuserData} userId={this.props.userId} />
+                    <UpdateInfo {...props} pInfo={this.state.personal} getUserInfo={this.getuserData} userId={this.props.userId} />
                     )}
                 />
                  <Route
@@ -161,7 +164,7 @@ class UserProfile extends React.Component {
                 <Route
                     path={`${this.props.match.path}/returnExchange`}
                     component={props => (
-                    <ReturnExchange {...props} userId={this.props.userId} />
+                    <ReturnExchange {...props} userId={this.props.userId} itemsBought={this.state.itemsBought} />
                     )}
                 />
             </div>

@@ -11,7 +11,8 @@ let express = require("express"),
   LocalStrategy = require("passport-local"),
   path = require('path'),
   // fs = require('fs'),
-  Sell = require('./models/sellOrder');
+  Sell = require('./models/sellOrder'),
+  sgMail = require('@sendgrid/mail');
 
 
 let checksum = require('./checksum');
@@ -76,13 +77,16 @@ let port = process.env.PORT || 5001;
 // })
 
 app.post("/register", function(req, res) {
+  let address = {
+    zip: req.body.zip 
+  }
   User.register(
     new User({
+      email: req.body.email,
+      username: req.body.username,
       firstname: req.body.firstname,
       lastname: req.body.lastname,
-      email: req.body.email,
-      pinCode: req.body.pinCode,
-      username: req.body.username
+      defaultAddress: [address]
     }),
     req.body.password,
     function(err, user) {
@@ -182,26 +186,100 @@ app.post('/changePersonalChanges', function(req, res) {
   })
 });
 
-app.post('/changeAddressChanges', function(req, res) {
+app.post('/addAddress', function(req, res) {
   User.findOne({_id: req.body.userId}, function(err, foundUser) {
     if (err) {console.log(err);}
     else {
-      Object.assign(foundUser, {
+      let address = {
+        firstname: req.body.address.fName,
+        lastname: req.body.address.lName,
         addr1: req.body.address.addr1,
         addr2: req.body.address.addr2,
+        landmark: req.body.address.landmark,
         city: req.body.address.city,
         state: req.body.address.state,
-        zip: req.body.address.zip
-      });
+        zip: req.body.address.zip,
+        default: false
+      }
+      if (foundUser.addresses.length === 0) {
+        address['default'] = true;
+      }
+      foundUser.addresses.push(address);
       foundUser.save(function(err, updateduser) {
         if(err) {console.log(err);}
         else {
-          res.json(updateduser);
+          res.json(updateduser.addresses);
         }
       })
     }
   })
 });
+
+app.post('/getDefaultAddress', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    let defaultAddress = foundUser.addresses.filter((addr) => addr.default === true);
+    if(req.body.onlyDefault) {
+      res.json(defaultAddress);
+    } else {
+      res.json(Object.assign(foundUser , {addresses: defaultAddress}));
+    }
+  })
+})
+
+app.post('/editAddress', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    if(err) {console.log(err)} 
+    else {
+      let newAddress = {
+        firstname: req.body.address.fName,
+        lastname: req.body.address.lName,
+        landmark: req.body.address.landmark,
+        addr1: req.body.address.addr1,
+        addr2: req.body.address.addr2,
+        city: req.body.address.city,
+        state: req.body.address.state,
+        zip: req.body.address.zip 
+      }
+      foundUser.addresses[req.body.address.index] = newAddress;
+  
+      foundUser.save(function(err, user) {
+        if(err) {console.log(err);} else {
+          res.json(foundUser.addresses);
+        }
+      })
+    }
+  });
+})
+
+app.post('/makeDeafult', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+
+    foundUser.addresses.map((v,i) => Object.assign(v, {default: false}));
+    foundUser.addresses.map((v,i) => {
+      if(i === req.body.index) {
+        return Object.assign(v, {default: true})
+      } else {
+        return v;
+      }
+    })
+    foundUser.save(function(err, user) {
+      if(err) {console.log(err);} else {
+        res.json(user.addresses);
+      }
+    })
+  })
+})
+
+app.post('/getAddresses', function(req, res) {
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    if (req.body.exceptDefault) {
+      let addresses = foundUser.addresses.filter((address) => address.default !== true);
+      res.json(addresses);
+    } else {
+      res.json(foundUser.addresses);
+    }
+  })
+})
 
 app.post('/getUserDetails', function(req, res) {
   User.findOne({_id: req.body.userId}, function(err, foundUser) {
@@ -241,11 +319,88 @@ app.post('/getSellOrders', function(req, res) {
 });
 
 app.post('/getOrders', function(req, res) {
+  let placedOn = [];
   User.findOne({_id: req.body.userId}, function(err, foundUser) {
     if (err) { console.log(err); }
     else {
-      res.json(foundUser.orders);
+      let length = foundUser.orders.length;
+      foundUser.orders.map((order,i) => {
+        Order.findOne({_id: order}, function(err, foundOrder) {
+          if (err) {console.log(err);} else {
+            placedOn.push(foundOrder.placedOn);
+            if (i === length -1) {
+              return res.json({ 
+                orders: foundUser.orders,
+                placedOn: placedOn
+               })
+            }
+          }
+        })
+      })
     }
+  })
+})
+
+app.post('/getOrderItems', function(req, res) {
+  Order.findOne({_id: req.body.orderId}, function(err, foundOrder) {
+    if(err) {console.log(err);} else {
+      const promises = foundOrder.items.map(async itemId=> {
+        let itemDetail = await Item.findOne({_id: itemId});
+        return itemDetail;
+      })
+      const result = Promise.all(promises);
+      result.then(result => {
+        res.json({items: result, shippingAddress: foundOrder.shippingAddress, totalPrice: foundOrder.price});
+      })
+    }
+    
+  })
+})
+
+app.post('/getItemDetails', function(req, res) {
+  let items = req.body.items;
+
+  let promises = items.map(async item=> {
+    let itemDetail = await Item.findOne({_id: item});
+    return itemDetail;
+  })
+
+  const result = Promise.all(promises);
+  result.then(result =>{
+    res.json(result);
+  });
+
+})
+
+app.post('/getPotentialReturnItems', function(req, res) {
+  let items = [];
+  User.findOne({_id: req.body.userId}, function(err, foundUser) {
+    if (err) {console.log(err);} else {
+      let promises = foundUser.orders.map(async order => {
+        let orderDetail =  await Order.findOne({_id: order});
+        return orderDetail
+      })
+      const result = Promise.all(promises);
+      result.then(orders => {
+        orders.map(order => {
+          items = items.concat(order.items);
+        })
+        res.json(items);
+      })
+    }
+  })
+})
+
+
+app.post('/markAsReturn', function(req, res) {
+  let itemId = req.body.item;
+  Item.findOne({_id: itemId}, function(err, foundItem) {
+    foundItem.returned = true;
+    foundItem.save(function(err, savedItem) {
+      if(err) {console.log(err);} else {
+        res.json(true);
+      }
+    })
   })
 })
 
@@ -255,8 +410,11 @@ app.post('/makePayloadForPaytm', function(req, res) {
     itemIds.push(v._id);
   });
       Order.create({
-        price: '500',
-        items: itemIds
+        price: req.body.totalPrice,
+        items: itemIds,
+        placedOn: Date.now(),
+        customer: req.body.custId,
+        shippingAddress: req.body.shippingAddress
       }, function(err, order) {
         if(err) { console.log(err);  res.end('oops'); }
         else {
@@ -270,7 +428,7 @@ app.post('/makePayloadForPaytm', function(req, res) {
                   let paramlist = {
                     ORDER_ID: String(order._id),
                     CUST_ID: req.body.custId,
-                    MOBILE_NO: '1234567890',
+                    MOBILE_NO: '9417392969',
                     INDUSTRY_TYPE_ID: 'Retail',
                     CHANNEL_ID: 'WEB',
                     TXN_AMOUNT: '500',
@@ -286,7 +444,7 @@ app.post('/makePayloadForPaytm', function(req, res) {
                       paramarray[name] = paramlist[name] ;
                       }
                     }
-                    paramarray['CALLBACK_URL'] = `http://localhost:5000/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}&fromCart=${req.body.fromCart}&items=${itemIds}`;
+                    paramarray['CALLBACK_URL'] = `https://radiant-thicket-90721.herokuapp.com/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}&fromCart=${req.body.fromCart}&items=${itemIds}`;
                     checksum.genchecksum(paramarray, PAYTM_MERCHANT_KEY, function(result){
                       let obj = { }
                       for (var key in result) {
@@ -304,7 +462,6 @@ app.post('/makePayloadForPaytm', function(req, res) {
 
 
 app.post('/responseFromPaytm/',function(req, res) {
-  // console.log('jasbdkjabskda', req, req.query);
   let custId = req.query.custId,
       orderId = req.query.orderId,
       fromCart = req.query.fromCart,
@@ -336,7 +493,6 @@ app.post('/responseFromPaytm/',function(req, res) {
             if(err) {console.log(err);}
             else {
               if(index === items.length-1)
-              console.log(index, items.length-1);
                return res.render('success.ejs',{ 'restdata' : "true" ,'paramlist' : paramlist});
             }
           })
@@ -358,7 +514,6 @@ app.post('/responseFromPaytm/',function(req, res) {
 })
 
 app.get('/goToSPA', function(req, res) {
-  console.log('here');
   res.sendFile(path.join(__dirname + "/../dist/index.html"));
 });
 
@@ -366,5 +521,21 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../dist/index.html"));
 });
 
+
+
+app.post('/contactus', function(req, res) {
+  sgMail.setApiKey('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');
+  const msg = {
+    to: req.body.data.sender,
+    from: 'gukiece@gmail.com',
+    subject: req.body.data.subject,
+    text: req.body.data.text,
+    html: `<p>${req.body.data.text}</p>`,
+  };
+  sgMail.send(msg)
+    .then((rslt) => {
+      res.send(rslt);
+    })
+})
 
 app.listen(5000, () => console.log(`Example app listening on port 5000!`));

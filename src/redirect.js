@@ -10,7 +10,6 @@ class Redirect extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.location.state);
         let form = document.getElementById('f1');
         form.submit();
     }

@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 class Login extends React.Component {
   constructor(props) {
@@ -41,19 +42,25 @@ class Login extends React.Component {
           password: this.state.password
         })
         .then((response) => {
+          console.log(response);
           this.setState({
             loader: false
-          })
+          }, () => toast.success("Logged in successfully !", {
+            position: toast.POSITION.BOTTOM_CENTER
+          }));
           let userInfo = response.data[0];
           sessionStorage.setItem("userId", userInfo._id);
           this.props.status(true, userInfo._id);
           this.props.history.push(`/user/${userInfo._id}`);
         })
         .catch((error) => {
+          console.log(error);
           this.setState({
             loader: false
           })
-          console.log(error)
+          toast.error("Something went wrong !", {
+            position: toast.POSITION.BOTTOM_CENTER
+          });
         });
     }
   }

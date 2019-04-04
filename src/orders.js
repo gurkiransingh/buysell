@@ -1,5 +1,7 @@
 import React from 'react';
 import Axios from 'axios';
+import OrdersList from './orders-list';
+import Modal from 'react-responsive-modal';
 
 class Orders extends React.Component {
     constructor(props) {
@@ -7,31 +9,68 @@ class Orders extends React.Component {
 
         this.state = {
             orders: [],
-            selectedOrder: '',
-            loader: false
+            placedOn: [],
+            loader: false,
+            currentIndex: -1,
+            open: false,
+            items: [],
+            shippingAddress: {
+                firstname:'',
+                lastname:'',
+                addr1: '',
+                addr2: '',
+                landmark: '',
+                city: '',
+                state: '',
+                zip: ''
+            },
+            totalPrice: 0
         }
 
-        this.handleOrderClick = this.handleOrderClick.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.onCloseModal = this.onCloseModal.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount() { 
         this.setState({
             loader: true
         })
         Axios.post('/getOrders', { userId: this.props.userId})
             .then((res) => {
+                console.log(res);
                 this.setState({
-                    orders: res.data,
-                    selectedOrder: res.data[0],
+                    orders: res.data.orders,
+                    placedOn: res.data.placedOn,
                     loader: false
                 })
             })
     }
 
-    handleOrderClick(order) {
+    onCloseModal (){
+        this.setState({ open: false });
+        };
+
+    handleChange(i) {
         this.setState({
-            selectedOrder: order
+            currentIndex: i
+          });
+    }
+
+    showDetailsModal(order) {
+        this.setState({
+            loader: true
         })
+        Axios.post('/getOrderItems', {orderId: order.question})
+            .then((res) => {
+                console.log(res);
+                this.setState({
+                    loader: false,
+                    open: true,
+                    items: res.data.items,
+                    shippingAddress: res.data.shippingAddress[0],
+                    totalPrice: res.data.totalPrice
+                })
+            })
     }
 
     render() {
@@ -40,30 +79,46 @@ class Orders extends React.Component {
             {
                 this.state.loader ? (<div className='spinner spinner-1'></div>) : null
             }
-                <div className='order'>
+                <div className='accordion'>
                     {
-                        this.state.orders.map((order, index) => {
-                            return <p 
-                                    onClick={this.handleOrderClick.bind(this, order)} 
-                                    className = {this.state.selectedOrder === order ? 'selected' : ''}
-                                    key={index}>
-                                    {order}
-                                    </p>
-                        })
+                        this.state.orders.map((order, i) => (
+                            <OrdersList 
+                                question={order}
+                                date= {this.state.placedOn[i]}
+                                handleChange={this.handleChange.bind(this, i)}
+                                key={i}
+                                index={i}
+                                currentIndex={this.state.currentIndex}
+                                showDetailsModal={this.showDetailsModal.bind(this)}
+                            />
+                        ))
                     }
                 </div>
-                <div className='separator'>
-                </div>
-                <div className='feedback'>
-                    <div className='header'>
-                    {this.state.selectedOrder}
-                    </div>
-                    <div className='details'>Details of this order goes here</div>
-                    <div className='form'>
-                        <label>Post a query regarding this order</label>
-                        <textarea></textarea>
-                        <button>Submit</button>
-                    </div>
+                <div>
+                  <Modal open={this.state.open} onClose={this.onCloseModal} center>
+                      <div className='order-details-modal'>
+                        <p>Order placed</p>
+                        <p>Items bought</p>
+                        <div className='items'>
+                            {
+                                this.state.items.map((item, i) => (
+                                    <div className='item'>
+                                        <div>
+                                            <p><span>{i+1}.</span><span>{item.name}</span></p>
+                                            <p>{item.price}</p>
+                                        </div>
+                                        <p>{item.desc}</p>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                        <div className='total-price'>
+                            <p>Total Price:</p>
+                            <p>{this.state.totalPrice}</p>
+                        </div>
+                        <p>Shipped to : <span>{`${this.state.shippingAddress.firstname} ${this.state.shippingAddress.lastname}, ${this.state.shippingAddress.addr1}, ${this.state.shippingAddress.addr2}, ${this.state.shippingAddress.city} - ${this.state.shippingAddress.zip}`}</span></p>
+                      </div>
+                  </Modal>
                 </div>
             </div>
         )
