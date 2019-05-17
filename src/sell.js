@@ -1,6 +1,7 @@
 import React from "react";
 import Axios from 'axios';
 import { toast } from 'react-toastify';
+import Modal from 'react-responsive-modal';
 
 class Sell extends React.Component {
   constructor(props) {
@@ -27,15 +28,36 @@ class Sell extends React.Component {
       ],
       totalSum: 0,
       sellOrders: [],
-      loader: false
+      loader: false,
+      currentSellOrder: false,
+      open: false,
+      sellOrderDetail: null 
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputFocus = this.handleInputFocus.bind(this);
     this.placeSellOrder = this.placeSellOrder.bind(this);
-
+    this.getSellOrders = this.getSellOrders.bind(this);
+    this.onCloseModal = this.onCloseModal.bind(this);
+    this.showDetails = this.showDetails.bind(this);
   }
+
+  showDetails(id) {
+    console.log(id);
+    Axios.post('http://localhost:5000/getSellOrderDetail', {id: id})
+      .then((res) => {
+        console.log(res);
+        this.setState({
+          sellOrderDetail: res.data,
+          open: true
+        })
+      })
+  }
+
+  onCloseModal (){
+    this.setState({ open: false });
+    };
 
   handleSubmit() {
     let totalSum = 0;
@@ -56,30 +78,37 @@ class Sell extends React.Component {
     let map = this.state.clothingTypes.filter((v, i) => {
       return delete v.price
     })
-    Axios.post('/createSellOrder', {userId: this.props.userId , data: map, thought: this.state.totalSum})
+    Axios.post('http://localhost:5000/createSellOrder', {userId: this.props.userId , data: map, thought: this.state.totalSum})
       .then((res) => {
         this.setState({
           loader: false,
-          clothingTypes: this.defaultClothingTypes 
+          clothingTypes: this.defaultClothingTypes ,
+          currentSellOrder: true
         }, () => {
           Array.from(document.getElementsByClassName('sell-inputs')).map((v,i) => v.value = '');
           toast.info('Sell Order placed successfully', {
             position: toast.POSITION.BOTTOM_CENTER
           })
+          this.getSellOrders();
         })
       })
   }
 
-
-  componentDidMount() {
-    this.submit.current.style.display = 'none';
-    Axios.post('/getSellOrders', {userId: this.props.userId})
+  getSellOrders() {
+    Axios.post('http://localhost:5000/getSellOrders', {userId: this.props.userId})
       .then((res) => {
         this.setState({
           sellOrders: res.data
+        },  () => {
+          console.log(this.state.sellOrders);
         })
-        // console.log(document.getElementsByClassName(''))
       });
+  }
+  
+
+  componentDidMount() {
+    this.submit.current.style.display = 'none';
+    this.getSellOrders();
   }
 
   handleInputChange(e,clothType) {
@@ -142,26 +171,59 @@ class Sell extends React.Component {
       </div>
       <div className='separator'></div>
       <div className='info'>
-        <div>
-          <p>Total Estimated amount you will be getting : <span>Rs {this.state.totalSum}</span></p>
-          <p>Estimated time for pick-up : <span>2.5 hours</span></p>
-          <p>Status : Pick-up</p>
-        </div>
-        <div className='separator'></div>
         <div className='sell-orders'>
           <p className='heading'>Past Sell Orders</p>
           {
-            this.state.sellOrders.map((v, i) => (<p key={i}>{v}</p>))
+            this.state.sellOrders.map((v, i) => (<p className='ind-order' onClick={this.showDetails.bind(this, v)} key={i}>{v}</p>))
           }
         </div>
       </div>
       </div>
       <hr />
+      <div className='current-status'>
+          <p>Current Order</p>
+          <p>Total Estimated amount you will be getting : 
+            {
+              this.state.currentSellOrder ? (<span>Rs {this.state.totalSum}</span>) : (<span> Awaiting order ...</span>)
+            }
+          </p>
+          <p>Status : 
+            {
+              this.state.currentSellOrder? (<span>Pick-up</span>) : (<span> Awaiting order ...</span>)
+            }
+          </p>
+        </div>
+        <hr />
       <div className='notes'>
       <h3>Note :</h3>
       <p>The price for the clothes in 'other' type cannot be determined before quality check</p>
       <p>The actual total amount and the estimated amount may vary as need to make sure the clothes meet our minimum quality standards</p>
       </div>
+
+      <Modal open={this.state.open} onClose={this.onCloseModal} center>
+            <div className='sell-modal'>
+            <div className='order'>
+            <span>Type</span><span>Quantity</span>
+              {
+                this.state.sellOrderDetail ? 
+                (this.state.sellOrderDetail.data.map((v,i) => {
+                  return (
+                    <div key={i}>
+                      <span>{v.clothType}</span><span>{v.quantity}</span>
+                      </div>
+                  )
+                })) : null
+              }
+            </div>
+            <div className='thought'>
+              <span>You thought</span>{this.state.sellOrderDetail? (<span>{this.state.sellOrderDetail.thought}</span>) : (null)}
+            </div>
+            <div className='got'>
+              <span>You got</span>{this.state.sellOrderDetail? (<span>{this.state.sellOrderDetail.got}</span>) : (null)}
+            </div>
+            </div>
+      </Modal>
+
       </div>
     );
   }

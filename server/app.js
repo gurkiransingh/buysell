@@ -8,6 +8,7 @@ let express = require("express"),
   User = require("./models/user"),
   Order = require('./models/order'),
   Item = require('./models/item'),
+  SellOrder = require('./models/sellOrder'),
   LocalStrategy = require("passport-local"),
   path = require('path'),
   // fs = require('fs'),
@@ -238,7 +239,8 @@ app.post('/editAddress', function(req, res) {
         addr2: req.body.address.addr2,
         city: req.body.address.city,
         state: req.body.address.state,
-        zip: req.body.address.zip 
+        zip: req.body.address.zip,
+        default: req.body.address.default 
       }
       foundUser.addresses[req.body.address.index] = newAddress;
   
@@ -291,9 +293,10 @@ app.post('/createSellOrder', function(req, res) {
   let data = {
     custId: req.body.userId,
     thought: req.body.thought,
-    data: req.body.data
+    data: req.body.data,
+    current: true
   }
-
+  let orderToMark;
   Sell.create(data, function(err, letsc) {
     if(err) {console.log(err);}
     else {
@@ -303,10 +306,20 @@ app.post('/createSellOrder', function(req, res) {
         foundUser.save(function(err, user) {
           if(err) {console.log(err);}
           else {
-            res.json(letsc);
+            if(foundUser.sellOrders.length-2 >= 0) {
+              orderToMark = foundUser.sellOrders[foundUser.sellOrders.length-2];
+            
+              Sell.findOne({_id: orderToMark}, function(err, sellOrder) {
+              if(err) {console.log(err);} else {
+                sellOrder['current'] = false;
+                res.json(letsc);
+              }
+              })
+            } 
           }
         })
       })
+      
     }
   })
 });
@@ -370,6 +383,15 @@ app.post('/getItemDetails', function(req, res) {
     res.json(result);
   });
 
+})
+
+app.post('/getSellOrderDetail', function(req, res) {
+  let id = req.body.id;
+  SellOrder.findOne({_id: id}, function(err, foundOrder) {
+    if (err) {console.log(err);} else {
+      res.send(foundOrder); 
+    }
+  })
 })
 
 app.post('/getPotentialReturnItems', function(req, res) {
@@ -444,7 +466,7 @@ app.post('/makePayloadForPaytm', function(req, res) {
                       paramarray[name] = paramlist[name] ;
                       }
                     }
-                    paramarray['CALLBACK_URL'] = `https://radiant-thicket-90721.herokuapp.com/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}&fromCart=${req.body.fromCart}&items=${itemIds}`;
+                    paramarray['CALLBACK_URL'] = `http://localhost:5000/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}&fromCart=${req.body.fromCart}&items=${itemIds}`;
                     checksum.genchecksum(paramarray, PAYTM_MERCHANT_KEY, function(result){
                       let obj = { }
                       for (var key in result) {

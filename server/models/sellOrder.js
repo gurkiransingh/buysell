@@ -5,7 +5,8 @@ let SellOrderSchema = new mongoose.Schema({
     custId: String,
     thought: Number,
     got: Number,
-    data: [{clothType: String,  quantity: Number}]
+    data: [{clothType: String,  quantity: Number}],
+    current: Boolean
 })
 
 module.exports = mongoose.model('sellOrder', SellOrderSchema);

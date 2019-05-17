@@ -101,7 +101,7 @@ class UpdateInfo extends React.Component {
         this.setState({
             loader: true
         })
-        Axios.post('/getAddresses', {userId: this.props.match.params.id})
+        Axios.post('http://localhost:5000/getAddresses', {userId: this.props.match.params.id})
             .then((res) => {
                 this.setState({
                     addresses: res.data
@@ -251,7 +251,7 @@ class UpdateInfo extends React.Component {
         this.setState({
             loader: true
         })
-        Axios.post('/makeDeafult', {index: index, userId: this.props.match.params.id})
+        Axios.post('http://localhost:5000/makeDeafult', {index: index, userId: this.props.match.params.id})
             .then((res) => {
                 this.setState({
                     loader: false,
@@ -265,7 +265,7 @@ class UpdateInfo extends React.Component {
             disablePersonal: true,
             loader: true
         })
-        Axios.post('/changePersonalChanges', {personal: this.state.personal, userId: this.props.match.params.id})
+        Axios.post('http://localhost:5000/changePersonalChanges', {personal: this.state.personal, userId: this.props.match.params.id})
             .then((res) => {
                 this.setState({
                     loader: false
@@ -293,7 +293,7 @@ class UpdateInfo extends React.Component {
             loader: true
         });
 
-        Axios.post('/addAddress', {address: this.state.addressToAdd, userId: this.props.match.params.id})
+        Axios.post('http://localhost:5000/addAddress', {address: this.state.addressToAdd, userId: this.props.match.params.id})
             .then((res) => {
                 this.setState({
                     loader: false
@@ -310,7 +310,7 @@ class UpdateInfo extends React.Component {
             loader: true
         });
 
-        Axios.post('/editAddress', {address: this.state.addressToEdit, userId: this.props.match.params.id})
+        Axios.post('http://localhost:5000/editAddress', {address: this.state.addressToEdit, userId: this.props.match.params.id})
             .then((res) => {
                 this.setState({
                     loader: false

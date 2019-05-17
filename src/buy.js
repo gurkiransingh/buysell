@@ -26,7 +26,7 @@ class Buy extends React.Component {
     this.setState({
       loader: true
     })
-    Axios.get('/getAllItems')
+    Axios.get('http://localhost:5000/getAllItems')
       .then((res) => {
         this.setState({
           loader: false

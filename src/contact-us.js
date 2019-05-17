@@ -18,7 +18,7 @@ class Contact extends React.Component {
   }
 
   sendEmail() {
-    Axios.post('/contactus', {data: this.state.email})
+    Axios.post('http://localhost:5000/contactus', {data: this.state.email})
       .then((res) => {
         console.log(res);
       })

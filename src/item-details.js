@@ -17,7 +17,7 @@ class ItemDetails extends React.Component {
         this.setState({
             loader: true
         })
-        Axios.post('/pushtocart', {
+        Axios.post('http://localhost:5000/pushtocart', {
             itemId: this.props.location.state.id,
             custId: this.props.userId
         })
