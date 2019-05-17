@@ -466,7 +466,7 @@ app.post('/makePayloadForPaytm', function(req, res) {
                       paramarray[name] = paramlist[name] ;
                       }
                     }
-                    paramarray['CALLBACK_URL'] = `http://localhost:5000/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}&fromCart=${req.body.fromCart}&items=${itemIds}`;
+                    paramarray['CALLBACK_URL'] = `https://radiant-thicket-90721.herokuapp.com/responseFromPaytm/?custId=${req.body.custId}&orderId=${String(order._id)}&fromCart=${req.body.fromCart}&items=${itemIds}`;
                     checksum.genchecksum(paramarray, PAYTM_MERCHANT_KEY, function(result){
                       let obj = { }
                       for (var key in result) {
