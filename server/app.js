@@ -543,8 +543,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../dist/index.html"));
 });
 
-
-
 app.post('/contactus', function(req, res) {
   sgMail.setApiKey('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');
   const msg = {
@@ -560,4 +558,7 @@ app.post('/contactus', function(req, res) {
     })
 })
 
-app.listen(5000, () => console.log(`Example app listening on port 5000!`));
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+
