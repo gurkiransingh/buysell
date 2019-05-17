@@ -23,7 +23,7 @@ class ReturnExchange extends React.Component {
     }
 
     markAsReturn() {
-        Axios.post('http://localhost:5000/markAsReturn', {item: this.state.selectedItemToReturn})
+        Axios.post('/markAsReturn', {item: this.state.selectedItemToReturn})
             .then((res) =>{
                 console.log(res);
                 if(res.data === true) {
@@ -50,7 +50,7 @@ class ReturnExchange extends React.Component {
     }
 
     fetchDetails() {
-        Axios.post('http://localhost:5000/getItemDetails', {items: this.props.itemsBought})
+        Axios.post('/getItemDetails', {items: this.props.itemsBought})
         .then((res) => {
             console.log(res);
             this.setState({

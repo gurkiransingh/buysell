@@ -48,7 +48,7 @@ class Cart extends React.Component {
 
     componentDidMount() {
         let totalPrice = 0;
-        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
+        Axios.post('/getCartItems', {custId: this.props.userId})
         .then((res) => {
             this.setState({
                 cartItems: res.data
@@ -62,7 +62,7 @@ class Cart extends React.Component {
             })
         });
 
-        Axios.post('http://localhost:5000/getDefaultAddress', {userId: this.props.userId,  onlyDefault: true})
+        Axios.post('/getDefaultAddress', {userId: this.props.userId,  onlyDefault: true})
             .then((res) =>{
                 this.setState({
                     defaultAddress: res.data
@@ -80,7 +80,7 @@ class Cart extends React.Component {
     }
 
     displayAddresses() {
-        Axios.post('http://localhost:5000/getAddresses', {userId: this.props.userId, exceptDefault: true})
+        Axios.post('/getAddresses', {userId: this.props.userId, exceptDefault: true})
             .then((res) => {
                 this.setState({
                     otherAddresses: res.data,
@@ -109,7 +109,7 @@ class Cart extends React.Component {
     }
 
     fetchUpdated(item) {
-        Axios.post('http://localhost:5000/deleteItemFromCart', {custId: this.props.userId, itemId: item._id})
+        Axios.post('/deleteItemFromCart', {custId: this.props.userId, itemId: item._id})
             .then((res) => {
                 console.log(res);
                 if(res.data === true) {
@@ -126,7 +126,7 @@ class Cart extends React.Component {
             shippingAddress = this.state.otherAddresses[this.state.selectedAddressIndex]
         }
         console.log(shippingAddress);
-        Axios.post('http://localhost:5000/makePayloadForPaytm', { custId: this.props.userId, items: this.props.cartItems, fromCart: true, shippingAddress: shippingAddress, totalPrice: this.state.totalPrice})
+        Axios.post('/makePayloadForPaytm', { custId: this.props.userId, items: this.props.cartItems, fromCart: true, shippingAddress: shippingAddress, totalPrice: this.state.totalPrice})
             .then((res) => {
                 this.props.history.push({
                     pathname: `/user/${this.props.userId}/pgredirect`,

@@ -37,7 +37,7 @@ class Login extends React.Component {
         loader: true
       })
       axios
-        .post("http://localhost:5000/login", {
+        .post("/login", {
           username: this.state.username,
           password: this.state.password
         })

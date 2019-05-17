@@ -32,7 +32,7 @@ class Profile extends React.Component {
     this.setState({
       loader: true
     })
-    Axios.post('http://localhost:5000/getDefaultAddress', { userId: this.props.userId})
+    Axios.post('/getDefaultAddress', { userId: this.props.userId})
       .then((res) => {
         this.setState({
           firstName: res.data.firstname,

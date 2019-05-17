@@ -35,7 +35,7 @@ class Orders extends React.Component {
         this.setState({
             loader: true
         })
-        Axios.post('http://localhost:5000/getOrders', { userId: this.props.userId})
+        Axios.post('/getOrders', { userId: this.props.userId})
             .then((res) => {
                 console.log(res);
                 this.setState({
@@ -60,7 +60,7 @@ class Orders extends React.Component {
         this.setState({
             loader: true
         })
-        Axios.post('http://localhost:5000/getOrderItems', {orderId: order.question})
+        Axios.post('/getOrderItems', {orderId: order.question})
             .then((res) => {
                 console.log(res);
                 this.setState({

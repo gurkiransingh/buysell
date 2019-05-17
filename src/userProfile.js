@@ -63,7 +63,7 @@ class UserProfile extends React.Component {
     }
 
     getOrderItems() {
-        Axios.post('http://localhost:5000/getPotentialReturnItems', {userId: this.props.match.params.id})
+        Axios.post('/getPotentialReturnItems', {userId: this.props.match.params.id})
             .then(res => {
                 this.setState({
                     itemsBought: res.data
@@ -73,7 +73,7 @@ class UserProfile extends React.Component {
 
 
     getCartItems() {
-        Axios.post('http://localhost:5000/getCartItems', {custId: this.props.userId})
+        Axios.post('/getCartItems', {custId: this.props.userId})
         .then((res) => {
             this.setState({
                 id: res.data.length,
@@ -84,7 +84,7 @@ class UserProfile extends React.Component {
 
     getuserData(fromUpdate) {
         let self = this;
-        Axios.post('http://localhost:5000/getUserDetails', {userId: this.props.match.params.id})
+        Axios.post('/getUserDetails', {userId: this.props.match.params.id})
         .then(function(res) {
             let personal = {
                 firstName: res.data.firstname,
