@@ -1,0 +1,125 @@
+import React from "react";
+import Item from './item';
+import Axios from 'axios';
+
+class Buy extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      clothType: ['Featured', 'denim', 'western', 'Ethnic', 'tops', 'shorts'],
+      clothTypeSelected: 'Featured',
+      priceType: ['Select', 'low to high', 'high to low'],
+      priceTypeSelected: 'Select',
+      items : [],
+      loader: false
+    }
+
+    this.handleTypeChange = this.handleTypeChange.bind(this);
+    this.handlePriceChange = this.handlePriceChange.bind(this);
+
+    this.originalItems  = [];
+
+  }
+
+  componentDidMount() {
+    this.setState({
+      loader: true
+    })
+    Axios.get('/getAllItems')
+      .then((res) => {
+        this.setState({
+          loader: false
+        })
+        this.originalItems = res.data;
+        this.setState({
+          items: res.data
+        })
+      })
+  }
+
+  handleTypeChange(e) {
+    this.setState({
+      items: this.originalItems
+    })
+    this.setState({
+      clothTypeSelected: e.target.value
+    }, () => {
+      this.setState(prevState => ({
+        items: prevState.items.filter((v,i) => (
+          v.type.toLowerCase() === this.state.clothTypeSelected.toLowerCase() || this.state.clothTypeSelected === 'Featured'
+        ))
+      }))
+    })
+    this.setState({
+      priceType: ['Select', 'low to high', 'high to low']
+    }, () => {
+      this.setState({
+        priceTypeSelected: 'Select'
+      })
+    })
+  }
+
+  handlePriceChange(e) {
+    this.setState({
+      priceTypeSelected: e.target.value
+    }, () => {
+      this.setState({
+        priceType: ['low to high', 'high to low']
+      })
+    });
+    if(e.target.value === 'low to high') {
+      this.state.items.sort((a,b) => (parseFloat(a.price) - parseFloat(b.price)));
+    } else if(e.target.value === 'high to low') {
+      this.state.items.sort((a,b) => (parseFloat(b.price) - parseFloat(a.price)));
+    }
+  }
+
+  render() {
+    return (
+      <div className={"buy-flow " + (this.state.loader ? 'fade' : '')}>
+        {
+          this.state.loader ? (<div className='spinner spinner-1'></div>) : null
+        }
+        <div className='buy-container'>
+          <div className='filters'>
+            <p className='sort-by'>Sort By:</p>
+            <div className='pair'>
+              <label>Type</label>
+              <select value={this.state.clothTypeSelected} onChange={this.handleTypeChange}>
+              {
+                this.state.clothType.map((v, i) => {
+                  return <option key={i} value={v} >{v}</option>
+                })
+              }
+            </select>
+          </div>
+          <div className='pair'>
+          <label>Price</label>
+            <select value={this.state.priceTypeSelected} onChange={this.handlePriceChange}>
+              {
+                this.state.priceType.map((v, i) => {
+                  return <option key={i} value={v}>{v}</option>
+                })
+              }
+            </select>
+          </div>
+          </div>
+          <div className='items-container'>
+          {
+            this.state.items
+              .filter((v,i) => v.archived === false)
+              .map((v,i) => {
+                return (
+                  <Item item={v} key={i} history={this.props}/>
+                )
+            })
+          }
+            </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Buy;
