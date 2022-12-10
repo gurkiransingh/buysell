@@ -44,7 +44,7 @@
     "body-parser": "^1.18.3",
     "circular-json": "^0.5.9",
     "ejs": "^2.6.1",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-session": "^1.15.6",
     "fbemitter": "^2.1.1",
     "font-awesome": "^4.7.0",
